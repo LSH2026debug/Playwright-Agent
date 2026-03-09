@@ -1,0 +1,154 @@
+{
+  "project": {
+    "name": "ai-playwright-poc",
+    "siteUrl": "https://www.saucedemo.com/",
+    "operator": "local-user",
+    "createdAt": "2026-03-09T09:36:12.793Z",
+    "updatedAt": "2026-03-09T09:36:12.793Z"
+  },
+  "steps": {
+    "project_init": {
+      "id": "project_init",
+      "title": "Project Initialization",
+      "status": "completed",
+      "artifacts": [
+        {
+          "label": "Project metadata",
+          "path": "artifacts/project.json",
+          "kind": "json"
+        }
+      ],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:12.794Z"
+    },
+    "requirements_upload": {
+      "id": "requirements_upload",
+      "title": "Requirements Upload",
+      "status": "completed",
+      "artifacts": [
+        {
+          "label": "requirements-input.md",
+          "path": "inputs/requirements-input.md",
+          "kind": "markdown"
+        }
+      ],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:13.054Z"
+    },
+    "requirements_normalize": {
+      "id": "requirements_normalize",
+      "title": "Requirements Normalize",
+      "status": "approved",
+      "artifacts": [
+        {
+          "label": "Normalized requirements",
+          "path": "requirements/normalized-requirements.md",
+          "kind": "markdown"
+        },
+        {
+          "label": "Normalized requirements metadata",
+          "path": "requirements/normalized-requirements.meta.json",
+          "kind": "json"
+        }
+      ],
+      "approvals": [
+        {
+          "stepId": "requirements_normalize",
+          "action": "reviewed",
+          "actor": "local-user",
+          "timestamp": "2026-03-09T09:36:13.169Z"
+        },
+        {
+          "stepId": "requirements_normalize",
+          "action": "approved",
+          "actor": "local-user",
+          "timestamp": "2026-03-09T09:36:13.176Z"
+        }
+      ],
+      "updatedAt": "2026-03-09T09:36:13.176Z"
+    },
+    "site_explore": {
+      "id": "site_explore",
+      "title": "Site Exploration",
+      "status": "draft",
+      "artifacts": [],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:12.796Z"
+    },
+    "plan_generate": {
+      "id": "plan_generate",
+      "title": "Plan Generation",
+      "status": "draft",
+      "artifacts": [],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:12.796Z"
+    },
+    "cases_generate": {
+      "id": "cases_generate",
+      "title": "Case Generation",
+      "status": "draft",
+      "artifacts": [],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:12.796Z"
+    },
+    "tests_generate": {
+      "id": "tests_generate",
+      "title": "Test Generation",
+      "status": "draft",
+      "artifacts": [],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:12.796Z"
+    },
+    "tests_run": {
+      "id": "tests_run",
+      "title": "Test Execution",
+      "status": "draft",
+      "artifacts": [],
+      "approvals": [],
+      "updatedAt": "2026-03-09T09:36:12.796Z"
+    }
+  },
+  "logs": [
+    {
+      "id": "1773048972794-c7a232",
+      "timestamp": "2026-03-09T09:36:12.794Z",
+      "stepId": "project_init",
+      "action": "init",
+      "actor": "local-user",
+      "message": "Initialized project for https://www.saucedemo.com/."
+    },
+    {
+      "id": "1773048973054-796f05",
+      "timestamp": "2026-03-09T09:36:13.054Z",
+      "stepId": "requirements_upload",
+      "action": "upload",
+      "actor": "local-user",
+      "message": "Uploaded source requirements."
+    },
+    {
+      "id": "1773048973115-6b9353",
+      "timestamp": "2026-03-09T09:36:13.115Z",
+      "stepId": "requirements_normalize",
+      "action": "generate",
+      "actor": "local-user",
+      "message": "Generated normalized requirements with template mode."
+    },
+    {
+      "id": "1773048973169-0d1d90",
+      "timestamp": "2026-03-09T09:36:13.169Z",
+      "stepId": "requirements_normalize",
+      "action": "review",
+      "actor": "local-user",
+      "message": "Saved human review edits."
+    },
+    {
+      "id": "1773048973176-3bd142",
+      "timestamp": "2026-03-09T09:36:13.176Z",
+      "stepId": "requirements_normalize",
+      "action": "approve",
+      "actor": "local-user",
+      "message": "Approved step for downstream execution."
+    }
+  ],
+  "updatedAt": "2026-03-09T09:36:13.176Z"
+}

@@ -1,0 +1,28 @@
+import path from 'node:path';
+
+import dotenv from 'dotenv';
+
+dotenv.config({ path: path.resolve(process.cwd(), '..', '.env') });
+dotenv.config();
+
+type LlmMode = 'auto' | 'mock' | 'template' | 'live';
+
+const rawMode = (process.env.AI_MODE ?? 'auto').trim().toLowerCase();
+
+const aiMode: LlmMode = rawMode === 'mock' || rawMode === 'template' || rawMode === 'live'
+  ? rawMode
+  : 'auto';
+
+export const config = {
+  port: Number(process.env.PORT ?? 3001),
+  defaultOperator: process.env.DEFAULT_OPERATOR ?? 'local-user',
+  ai: {
+    mode: aiMode,
+    provider: process.env.AI_PROVIDER ?? 'openai-compatible',
+    baseURL: process.env.AI_BASE_URL ?? 'https://api.openai.com/v1',
+    model: process.env.AI_MODEL ?? 'gpt-4.1-mini',
+    apiKey: process.env.AI_API_KEY ?? '',
+  },
+};
+
+export type Config = typeof config;

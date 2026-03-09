@@ -1,0 +1,535 @@
+import { useEffect, useState } from 'react';
+
+import {
+  approveStep,
+  fetchWorkflowState,
+  generateRequirements,
+  initProject,
+  reviewStep,
+  uploadRequirements,
+} from './api';
+import type { StepId, StepStatus, WorkflowPayload } from './types';
+
+const defaultOperator = 'local-user';
+
+const stepSequence: Array<{ id: StepId; label: string; description: string }> = [
+  {
+    id: 'project_init',
+    label: '1. 初始化',
+    description: '录入项目名称与目标站点 URL。',
+  },
+  {
+    id: 'requirements_upload',
+    label: '2. 上传需求',
+    description: '上传或粘贴原始需求文档。',
+  },
+  {
+    id: 'requirements_normalize',
+    label: '3. 规范化需求',
+    description: 'AI 生成规范化模块，人工审阅后批准。',
+  },
+  {
+    id: 'site_explore',
+    label: '4. 站点探索',
+    description: 'Phase 2: Playwright 受控探索与截图。',
+  },
+  {
+    id: 'plan_generate',
+    label: '5. 测试计划',
+    description: 'Phase 2: 基于已批准需求生成模块计划。',
+  },
+  {
+    id: 'cases_generate',
+    label: '6. 测试用例',
+    description: 'Phase 2: 生成结构化测试用例。',
+  },
+  {
+    id: 'tests_generate',
+    label: '7. 生成与执行',
+    description: 'Phase 2: 生成 Playwright 脚本并执行。',
+  },
+];
+
+export default function App() {
+  const [payload, setPayload] = useState<WorkflowPayload | null>(null);
+  const [activeStep, setActiveStep] = useState<StepId>('project_init');
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [projectName, setProjectName] = useState('ai-playwright-poc');
+  const [siteUrl, setSiteUrl] = useState('https://www.saucedemo.com/');
+  const [rawRequirements, setRawRequirements] = useState('');
+  const [normalizedRequirements, setNormalizedRequirements] = useState('');
+
+  useEffect(() => {
+    void refreshWorkflow();
+  }, []);
+
+  async function refreshWorkflow() {
+    setBusy(true);
+    setError(null);
+
+    try {
+      const nextPayload = await fetchWorkflowState();
+      setPayload(nextPayload);
+      setProjectName(nextPayload.workflow.project?.name ?? 'ai-playwright-poc');
+      setSiteUrl(nextPayload.workflow.project?.siteUrl ?? 'https://www.saucedemo.com/');
+      setRawRequirements(nextPayload.documents.rawRequirements ?? '');
+      setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? '');
+
+      const suggestedStep = inferActiveStep(nextPayload);
+      setActiveStep((currentStep) => (canAccessStep(nextPayload, currentStep) ? currentStep : suggestedStep));
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : '加载工作流状态失败。');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleProjectInit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await runAction(async () => {
+      const response = await initProject({
+        projectName,
+        siteUrl,
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '项目已初始化。');
+      setActiveStep('requirements_upload');
+    });
+  }
+
+  async function handleRequirementsUpload(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await runAction(async () => {
+      const response = await uploadRequirements({
+        file: selectedFile,
+        text: rawRequirements,
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '需求文档已保存。');
+      setSelectedFile(null);
+      setActiveStep('requirements_normalize');
+    });
+  }
+
+  async function handleGenerateRequirements() {
+    await runAction(async () => {
+      const response = await generateRequirements(defaultOperator);
+      setNormalizedRequirements(response.content);
+      await syncFromWorkflow(response.workflow, `AI 已生成规范化需求，模式: ${response.llm.mode}`);
+    });
+  }
+
+  async function handleReviewSave() {
+    await runAction(async () => {
+      const response = await reviewStep({
+        stepId: 'requirements_normalize',
+        content: normalizedRequirements,
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '人工审阅内容已保存。');
+    });
+  }
+
+  async function handleApproveRequirements() {
+    await runAction(async () => {
+      const response = await approveStep({
+        stepId: 'requirements_normalize',
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '需求规范已批准，可以进入下一步。');
+    });
+  }
+
+  async function runAction(action: () => Promise<void>) {
+    setBusy(true);
+    setError(null);
+    setNotice(null);
+
+    try {
+      await action();
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : '请求失败。');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function syncFromWorkflow(workflow: WorkflowPayload['workflow'], message: string) {
+    const nextPayload = await fetchWorkflowState();
+    setPayload({
+      ...nextPayload,
+      workflow,
+    });
+    setProjectName(workflow.project?.name ?? 'ai-playwright-poc');
+    setSiteUrl(workflow.project?.siteUrl ?? 'https://www.saucedemo.com/');
+    setRawRequirements(nextPayload.documents.rawRequirements ?? '');
+    setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? normalizedRequirements);
+    setNotice(message);
+  }
+
+  const workflow = payload?.workflow;
+  const activeStepState = workflow?.steps[activeStep];
+  const artifacts = activeStepState?.artifacts ?? [];
+  const recentLogs = workflow?.logs.slice(-8).reverse() ?? [];
+
+  return (
+    <div className="app-shell">
+      <aside className="step-rail">
+        <div className="brand-block">
+          <p className="eyebrow">Phase 1</p>
+          <h1>AI Playwright POC</h1>
+          <p>AI 生成与人工审批强绑定。没有批准，就没有下一步。</p>
+        </div>
+
+        <div className="step-list">
+          {stepSequence.map((step) => {
+            const status = workflow?.steps[step.id]?.status ?? 'draft';
+            const disabled = !canAccessStep(payload, step.id);
+
+            return (
+              <button
+                key={step.id}
+                className={`step-card ${activeStep === step.id ? 'is-active' : ''}`}
+                disabled={disabled}
+                onClick={() => setActiveStep(step.id)}
+                type="button"
+              >
+                <span className={`status-pill status-${status}`}>{formatStatus(status)}</span>
+                <strong>{step.label}</strong>
+                <span>{step.description}</span>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      <main className="content-panel">
+        <header className="hero-card">
+          <div>
+            <p className="eyebrow">Workflow State</p>
+            <h2>{stepSequence.find((step) => step.id === activeStep)?.label}</h2>
+            <p>{stepSequence.find((step) => step.id === activeStep)?.description}</p>
+          </div>
+          <div className="hero-meta">
+            <div>
+              <span>当前步骤状态</span>
+              <strong className={`status-pill status-${activeStepState?.status ?? 'draft'}`}>
+                {formatStatus(activeStepState?.status ?? 'draft')}
+              </strong>
+            </div>
+            <div>
+              <span>操作人</span>
+              <strong>{workflow?.project?.operator ?? defaultOperator}</strong>
+            </div>
+          </div>
+        </header>
+
+        {notice ? <div className="feedback success">{notice}</div> : null}
+        {error ? <div className="feedback error">{error}</div> : null}
+
+        {activeStep === 'project_init' ? (
+          <section className="panel-card">
+            <div className="panel-header">
+              <div>
+                <h3>项目初始化</h3>
+                <p>先把项目元数据写入文件，后续步骤都依赖这一步。</p>
+              </div>
+            </div>
+
+            <form className="form-grid" onSubmit={handleProjectInit}>
+              <label>
+                <span>项目名称</span>
+                <input
+                  value={projectName}
+                  onChange={(event) => setProjectName(event.target.value)}
+                  placeholder="ai-playwright-poc"
+                />
+              </label>
+
+              <label>
+                <span>网站 URL</span>
+                <input
+                  value={siteUrl}
+                  onChange={(event) => setSiteUrl(event.target.value)}
+                  placeholder="https://www.saucedemo.com/"
+                />
+              </label>
+
+              <div className="action-row">
+                <button className="primary" disabled={busy} type="submit">
+                  {busy ? '处理中...' : '初始化项目'}
+                </button>
+                <button
+                  className="ghost"
+                  disabled={!canGoNext(payload, 'project_init')}
+                  onClick={() => setActiveStep('requirements_upload')}
+                  type="button"
+                >
+                  下一步
+                </button>
+              </div>
+            </form>
+          </section>
+        ) : null}
+
+        {activeStep === 'requirements_upload' ? (
+          <section className="panel-card">
+            <div className="panel-header">
+              <div>
+                <h3>上传需求文档</h3>
+                <p>Phase 1 支持 `.md` / `.txt` 文件，也支持直接粘贴文本。</p>
+              </div>
+            </div>
+
+            <form className="form-grid" onSubmit={handleRequirementsUpload}>
+              <label>
+                <span>选择文件</span>
+                <input
+                  accept=".md,.txt"
+                  onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
+                  type="file"
+                />
+              </label>
+
+              <label className="full-span">
+                <span>或直接粘贴需求文本</span>
+                <textarea
+                  rows={10}
+                  value={rawRequirements}
+                  onChange={(event) => setRawRequirements(event.target.value)}
+                  placeholder="可以直接粘贴需求，或者参考 inputs/sample-saucedemo-requirements.md"
+                />
+              </label>
+
+              <div className="action-row">
+                <button className="primary" disabled={busy} type="submit">
+                  {busy ? '处理中...' : '保存需求'}
+                </button>
+                <button
+                  className="ghost"
+                  disabled={!canGoNext(payload, 'requirements_upload')}
+                  onClick={() => setActiveStep('requirements_normalize')}
+                  type="button"
+                >
+                  下一步
+                </button>
+              </div>
+            </form>
+          </section>
+        ) : null}
+
+        {activeStep === 'requirements_normalize' ? (
+          <section className="panel-card">
+            <div className="panel-header">
+              <div>
+                <h3>AI 规范化需求</h3>
+                <p>必须经过人工审阅并批准，后续 `site_explore` 才会开放。</p>
+              </div>
+            </div>
+
+            <div className="action-row action-row-tight">
+              <button className="primary" disabled={busy || !canGenerateRequirements(payload)} onClick={handleGenerateRequirements} type="button">
+                {busy ? '处理中...' : 'AI 生成'}
+              </button>
+              <button
+                className="secondary"
+                disabled={busy || !canSaveReview(payload) || !normalizedRequirements.trim()}
+                onClick={handleReviewSave}
+                type="button"
+              >
+                保存审阅
+              </button>
+              <button
+                className="accent"
+                disabled={busy || !canApproveRequirements(payload)}
+                onClick={handleApproveRequirements}
+                type="button"
+              >
+                批准当前步骤
+              </button>
+              <button
+                className="ghost"
+                disabled={!canGoNext(payload, 'requirements_normalize')}
+                onClick={() => setActiveStep('site_explore')}
+                type="button"
+              >
+                下一步
+              </button>
+            </div>
+
+            <label className="full-span">
+              <span>规范化需求结果</span>
+              <textarea
+                rows={18}
+                value={normalizedRequirements}
+                onChange={(event) => setNormalizedRequirements(event.target.value)}
+                placeholder="点击 AI 生成后，这里会出现可编辑的规范化需求模块。"
+              />
+            </label>
+          </section>
+        ) : null}
+
+        {activeStep === 'site_explore' || activeStep === 'plan_generate' || activeStep === 'cases_generate' || activeStep === 'tests_generate' ? (
+          <section className="panel-card placeholder-card">
+            <div className="panel-header">
+              <div>
+                <h3>{stepSequence.find((step) => step.id === activeStep)?.label}</h3>
+                <p>{stepSequence.find((step) => step.id === activeStep)?.description}</p>
+              </div>
+            </div>
+
+            <p>
+              Phase 1 只实现到“规范化需求 + 人工审批闸门”。当前步骤的后端 API 与前端操作面板会在 Phase 2 继续补齐。
+            </p>
+          </section>
+        ) : null}
+
+        <section className="details-grid">
+          <article className="panel-card compact-card">
+            <div className="panel-header">
+              <div>
+                <h3>当前工件</h3>
+                <p>显示当前步骤关联的文件路径。</p>
+              </div>
+            </div>
+
+            <ul className="artifact-list">
+              {artifacts.length === 0 ? <li>当前步骤暂无工件。</li> : null}
+              {artifacts.map((artifact) => (
+                <li key={artifact.path}>
+                  <strong>{artifact.label}</strong>
+                  <span>{artifact.path}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+
+          <article className="panel-card compact-card">
+            <div className="panel-header">
+              <div>
+                <h3>最近操作日志</h3>
+                <p>来自后端持久化工作流日志。</p>
+              </div>
+            </div>
+
+            <ul className="log-list">
+              {recentLogs.length === 0 ? <li>还没有操作日志。</li> : null}
+              {recentLogs.map((log) => (
+                <li key={log.id}>
+                  <strong>{log.action}</strong>
+                  <span>{log.message}</span>
+                  <small>{new Date(log.timestamp).toLocaleString('zh-CN')}</small>
+                </li>
+              ))}
+            </ul>
+          </article>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function inferActiveStep(payload: WorkflowPayload): StepId {
+  const steps = payload.workflow.steps;
+
+  if (steps.project_init.status === 'draft') {
+    return 'project_init';
+  }
+
+  if (steps.requirements_upload.status === 'draft') {
+    return 'requirements_upload';
+  }
+
+  if (!isApprovedStatus(steps.requirements_normalize.status)) {
+    return 'requirements_normalize';
+  }
+
+  return 'site_explore';
+}
+
+function canAccessStep(payload: WorkflowPayload | null, stepId: StepId): boolean {
+  if (!payload) {
+    return stepId === 'project_init';
+  }
+
+  const steps = payload.workflow.steps;
+
+  switch (stepId) {
+    case 'project_init':
+      return true;
+    case 'requirements_upload':
+      return steps.project_init.status === 'completed';
+    case 'requirements_normalize':
+      return steps.requirements_upload.status === 'completed';
+    case 'site_explore':
+      return isApprovedStatus(steps.requirements_normalize.status);
+    case 'plan_generate':
+      return isApprovedStatus(steps.site_explore.status);
+    case 'cases_generate':
+      return isApprovedStatus(steps.plan_generate.status);
+    case 'tests_generate':
+      return isApprovedStatus(steps.cases_generate.status);
+    case 'tests_run':
+      return isApprovedStatus(steps.tests_generate.status);
+    default:
+      return false;
+  }
+}
+
+function canGoNext(payload: WorkflowPayload | null, stepId: StepId): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  const status = payload.workflow.steps[stepId].status;
+
+  if (stepId === 'project_init' || stepId === 'requirements_upload') {
+    return status === 'completed';
+  }
+
+  return isApprovedStatus(status);
+}
+
+function canGenerateRequirements(payload: WorkflowPayload | null): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  return payload.workflow.steps.requirements_upload.status === 'completed';
+}
+
+function canSaveReview(payload: WorkflowPayload | null): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  const status = payload.workflow.steps.requirements_normalize.status;
+  return status === 'ai_generated' || status === 'human_reviewed';
+}
+
+function canApproveRequirements(payload: WorkflowPayload | null): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  return payload.workflow.steps.requirements_normalize.status === 'human_reviewed';
+}
+
+function formatStatus(status: StepStatus): string {
+  const labels: Record<StepStatus, string> = {
+    draft: '草稿',
+    ai_generated: 'AI 已生成',
+    human_reviewed: '人工已审阅',
+    approved: '已批准',
+    completed: '已完成',
+  };
+
+  return labels[status];
+}
+
+function isApprovedStatus(status: StepStatus): boolean {
+  return status === 'approved' || status === 'completed';
+}
