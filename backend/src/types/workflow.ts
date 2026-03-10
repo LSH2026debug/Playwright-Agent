@@ -21,7 +21,7 @@ export const stepStatuses = [
 
 export type StepStatus = (typeof stepStatuses)[number];
 
-export type ArtifactKind = 'markdown' | 'json' | 'yaml' | 'text';
+export type ArtifactKind = 'markdown' | 'json' | 'yaml' | 'text' | 'image';
 
 export interface ArtifactRef {
   label: string;
@@ -73,4 +73,7 @@ export interface WorkflowState {
 export interface WorkflowDocuments {
   rawRequirements: string | null;
   normalizedRequirements: string | null;
+  siteExploreSummary: string | null;
+  planDocument: string | null;
+  casesDocument: string | null;
 }

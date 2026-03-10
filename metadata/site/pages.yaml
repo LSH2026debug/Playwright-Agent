@@ -1,2 +1,55 @@
-pages: []
-
+pages:
+  - id: login
+    title: Swag Labs
+    url: https://www.saucedemo.com/
+    headings: []
+    roleHints: []
+    screenshot: metadata/screenshots/login.png
+  - id: inventory
+    title: Swag Labs
+    url: https://www.saucedemo.com/inventory.html
+    headings: []
+    roleHints:
+      - Open Menu
+      - Close Menu
+      - Add to cart
+      - All Items
+      - About
+      - Logout
+      - Reset App State
+      - Sauce Labs Backpack
+      - Sauce Labs Bike Light
+      - Sauce Labs Bolt T-Shirt
+    screenshot: metadata/screenshots/inventory.png
+  - id: cart
+    title: Swag Labs
+    url: https://www.saucedemo.com/cart.html
+    headings: []
+    roleHints:
+      - Open Menu
+      - Close Menu
+      - Continue Shopping
+      - Checkout
+      - All Items
+      - About
+      - Logout
+      - Reset App State
+      - Twitter
+      - Facebook
+    screenshot: metadata/screenshots/cart.png
+  - id: checkout-step-one
+    title: Swag Labs
+    url: https://www.saucedemo.com/checkout-step-one.html
+    headings: []
+    roleHints:
+      - Open Menu
+      - Close Menu
+      - Cancel
+      - All Items
+      - About
+      - Logout
+      - Reset App State
+      - Twitter
+      - Facebook
+      - LinkedIn
+    screenshot: metadata/screenshots/checkout-step-one.png

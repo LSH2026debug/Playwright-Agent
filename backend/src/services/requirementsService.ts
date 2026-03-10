@@ -55,10 +55,10 @@ export async function generateNormalizedRequirements(input: {
     throw new ApiError(409, 'requirements_missing', '请先上传需求文档，再执行需求规范化。');
   }
 
-  const llmResult = await llmAdapter.requirementsToPlan({
+  const llmResult = await llmAdapter.normalizeRequirements({
     siteUrl: workflow.workflow.project.siteUrl,
     sourceText,
-    promptPath: paths.requirementsPromptFile,
+    promptPath: paths.normalizePromptFile,
   });
 
   await writeText(paths.normalizedRequirementsFile, llmResult.content);

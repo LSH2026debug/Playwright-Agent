@@ -4,9 +4,22 @@ import { config } from '../config.js';
 
 type AdapterMode = 'live' | 'template' | 'mock';
 
-export interface RequirementsToPlanInput {
+export interface NormalizeRequirementsInput {
   siteUrl: string;
   sourceText: string;
+  promptPath: string;
+}
+
+export interface RequirementsToPlanInput {
+  siteUrl: string;
+  normalizedRequirements: string;
+  siteExploreSummary: string;
+  promptPath: string;
+}
+
+export interface PlanToCasesInput {
+  siteUrl: string;
+  approvedPlan: string;
   promptPath: string;
 }
 
@@ -44,7 +57,7 @@ export class LlmAdapter {
     return 'template';
   }
 
-  async requirementsToPlan(input: RequirementsToPlanInput): Promise<LlmGenerationResult> {
+  async normalizeRequirements(input: NormalizeRequirementsInput): Promise<LlmGenerationResult> {
     const mode = this.resolveMode();
 
     if (mode === 'mock') {
@@ -77,46 +90,7 @@ export class LlmAdapter {
         ].join('\n'),
       });
 
-      const response = await fetch(`${config.ai.baseURL.replace(/\/$/, '')}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${config.ai.apiKey}`,
-        },
-        body: JSON.stringify({
-          model: config.ai.model,
-          temperature: 0.2,
-          messages: [
-            {
-              role: 'system',
-              content: '你是一名资深 QA 自动化架构师。请只返回中文 Markdown。',
-            },
-            {
-              role: 'user',
-              content: prompt,
-            },
-          ],
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`上游 LLM 请求失败，状态码为 ${response.status}。`);
-      }
-
-      const data = (await response.json()) as {
-        choices?: Array<{
-          message?: {
-            content?: string;
-          };
-        }>;
-      };
-
-      const content = data.choices?.[0]?.message?.content?.trim();
-
-      if (!content) {
-        throw new Error('上游 LLM 返回了空内容。');
-      }
-
+      const content = await this.requestLiveCompletion(prompt);
       return {
         content,
         mode,
@@ -136,13 +110,113 @@ export class LlmAdapter {
     }
   }
 
-  async planToCases(): Promise<LlmGenerationResult> {
-    return {
-      content: '第二阶段占位内容：把已批准的测试计划转换为结构化测试用例。',
-      mode: 'template',
-      provider: config.ai.provider,
-      model: config.ai.model,
-    };
+  async requirementsToPlan(input: RequirementsToPlanInput): Promise<LlmGenerationResult> {
+    const mode = this.resolveMode();
+
+    if (mode === 'mock') {
+      return {
+        content: buildMockPlan(input.siteUrl),
+        mode,
+        provider: config.ai.provider,
+        model: config.ai.model,
+      };
+    }
+
+    if (mode === 'template') {
+      return {
+        content: buildTemplatePlan(input.siteUrl, input.normalizedRequirements, input.siteExploreSummary),
+        mode,
+        provider: config.ai.provider,
+        model: config.ai.model,
+        warning: config.ai.apiKey ? undefined : '未配置 AI_API_KEY，已自动回退到模板生成。',
+      };
+    }
+
+    try {
+      const prompt = await this.composePrompt({
+        promptPath: input.promptPath,
+        payload: [
+          `Site URL: ${input.siteUrl}`,
+          '',
+          'Approved normalized requirements:',
+          input.normalizedRequirements,
+          '',
+          'Approved site exploration summary:',
+          input.siteExploreSummary,
+        ].join('\n'),
+      });
+
+      const content = await this.requestLiveCompletion(prompt);
+      return {
+        content,
+        mode,
+        provider: config.ai.provider,
+        model: config.ai.model,
+      };
+    } catch (error) {
+      return {
+        content: buildTemplatePlan(input.siteUrl, input.normalizedRequirements, input.siteExploreSummary),
+        mode: 'template',
+        provider: config.ai.provider,
+        model: config.ai.model,
+        warning: error instanceof Error
+          ? `实时 LLM 请求失败，已回退到模板生成：${error.message}`
+          : '实时 LLM 请求失败，已回退到模板生成。',
+      };
+    }
+  }
+
+  async planToCases(input: PlanToCasesInput): Promise<LlmGenerationResult> {
+    const mode = this.resolveMode();
+
+    if (mode === 'mock') {
+      return {
+        content: buildMockCasesGuidance(input.siteUrl),
+        mode,
+        provider: config.ai.provider,
+        model: config.ai.model,
+      };
+    }
+
+    if (mode === 'template') {
+      return {
+        content: buildTemplateCasesGuidance(input.approvedPlan),
+        mode,
+        provider: config.ai.provider,
+        model: config.ai.model,
+        warning: config.ai.apiKey ? undefined : '未配置 AI_API_KEY，已自动回退到模板生成。',
+      };
+    }
+
+    try {
+      const prompt = await this.composePrompt({
+        promptPath: input.promptPath,
+        payload: [
+          `Site URL: ${input.siteUrl}`,
+          '',
+          'Approved plan:',
+          input.approvedPlan,
+        ].join('\n'),
+      });
+
+      const content = await this.requestLiveCompletion(prompt);
+      return {
+        content,
+        mode,
+        provider: config.ai.provider,
+        model: config.ai.model,
+      };
+    } catch (error) {
+      return {
+        content: buildTemplateCasesGuidance(input.approvedPlan),
+        mode: 'template',
+        provider: config.ai.provider,
+        model: config.ai.model,
+        warning: error instanceof Error
+          ? `实时 LLM 请求失败，已回退到模板生成：${error.message}`
+          : '实时 LLM 请求失败，已回退到模板生成。',
+      };
+    }
   }
 
   async caseToScript(): Promise<LlmGenerationResult> {
@@ -157,6 +231,50 @@ export class LlmAdapter {
   private async composePrompt(input: PromptedInput): Promise<string> {
     const promptTemplate = await fs.readFile(input.promptPath, 'utf8');
     return `${promptTemplate.trim()}\n\n${input.payload.trim()}\n`;
+  }
+
+  private async requestLiveCompletion(prompt: string): Promise<string> {
+    const response = await fetch(`${config.ai.baseURL.replace(/\/$/, '')}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.ai.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: config.ai.model,
+        temperature: 0.2,
+        messages: [
+          {
+            role: 'system',
+            content: '你是一名资深 QA 自动化架构师。请只返回中文 Markdown。',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`上游 LLM 请求失败，状态码为 ${response.status}。`);
+    }
+
+    const data = (await response.json()) as {
+      choices?: Array<{
+        message?: {
+          content?: string;
+        };
+      }>;
+    };
+
+    const content = data.choices?.[0]?.message?.content?.trim();
+
+    if (!content) {
+      throw new Error('上游 LLM 返回了空内容。');
+    }
+
+    return content;
   }
 }
 
@@ -238,6 +356,82 @@ function buildTemplateRequirementsModule(siteUrl: string, sourceText: string): s
     '## 审批检查清单',
     ...acceptanceChecklist,
   ].join('\n');
+}
+
+function buildMockPlan(siteUrl: string): string {
+  return [
+    '# 模块级测试计划',
+    '',
+    `- 目标站点：${siteUrl}`,
+    '- 这是 Mock 模式生成的模块级测试计划。',
+    '',
+    '## 计划模块',
+    '- auth',
+    '- catalog',
+    '- cart',
+    '- checkout',
+    '',
+    '## 测试重点',
+    '- 登录成功与失败反馈。',
+    '- 商品列表加载、详情一致性与主要操作。',
+    '- 购物车加购、移除与数量状态。',
+    '- 结账流程与完成页。',
+  ].join('\n');
+}
+
+function buildTemplatePlan(siteUrl: string, normalizedRequirements: string, siteExploreSummary: string): string {
+  const moduleMatches = [...normalizedRequirements.matchAll(/^[-*]\s+(auth|catalog|cart|checkout|core)(?:$|\s|：|:)/gm)].map((match) => match[1]);
+  const modules = moduleMatches.length > 0 ? [...new Set(moduleMatches)] : ['auth', 'catalog', 'cart', 'checkout'];
+  const exploreHighlights = summarizeExploreSummary(siteExploreSummary);
+
+  return [
+    '# 模块级测试计划',
+    '',
+    `- 目标站点：${siteUrl}`,
+    '- 当前结果由模板生成，用于第二阶段人工审阅。',
+    '',
+    '## 模块范围',
+    ...modules.map((moduleName) => `- ${moduleName}`),
+    '',
+    '## 每模块测试目标',
+    ...modules.flatMap((moduleName) => [
+      `### 模块：${moduleName}`,
+      '- 覆盖模块主流程。',
+      '- 覆盖一个关键负向场景。',
+      '- 覆盖页面可达性和关键交互。',
+      '',
+    ]),
+    '## 探索摘要参考',
+    ...exploreHighlights,
+    '',
+    '## 审阅检查清单',
+    '- 确认模块边界与规范化需求一致。',
+    '- 确认模块覆盖登录、浏览、购物车、结账等关键路径。',
+    '- 确认计划可以继续拆分为结构化测试用例。',
+  ].join('\n');
+}
+
+function summarizeExploreSummary(siteExploreSummary: string): string[] {
+  const lines = siteExploreSummary
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !line.startsWith('#'));
+
+  const overviewLines = lines.filter((line) => line.startsWith('- ')).slice(0, 6);
+  const flowLines = lines.filter((line) => /^\d+\.\s/.test(line)).slice(0, 4);
+
+  return [...overviewLines, ...flowLines];
+}
+
+function buildMockCasesGuidance(siteUrl: string): string {
+  return `基于 ${siteUrl} 的测试计划，优先产出 8 到 12 条覆盖 auth、catalog、cart、checkout 的结构化测试用例。`;
+}
+
+function buildTemplateCasesGuidance(approvedPlan: string): string {
+  const moduleMatches = [...approvedPlan.matchAll(/^###\s+模块：(.+)$/gm)].map((match) => match[1].trim());
+  const modules = moduleMatches.length > 0 ? moduleMatches.join('、') : 'auth、catalog、cart、checkout';
+  return `请围绕 ${modules} 生成结构化测试用例，优先覆盖主流程与关键负向路径。`;
 }
 
 function inferModules(sourceText: string, siteUrl: string): string[] {

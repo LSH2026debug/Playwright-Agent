@@ -10,7 +10,10 @@ import {
   saveRequirementsReview,
   uploadRequirements,
 } from '../services/requirementsService.js';
-import type { StepId } from '../types/workflow.js';
+import { exploreSite, saveSiteExploreReview } from '../services/siteExploreService.js';
+import { generatePlan, savePlanReview } from '../services/planService.js';
+import { generateCases, saveCasesReview } from '../services/casesService.js';
+import type { StepId, WorkflowState } from '../types/workflow.js';
 import { stepIds } from '../types/workflow.js';
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -74,19 +77,78 @@ router.post('/requirements/normalize', handleAsync(async (req, res) => {
   });
 }));
 
+router.post('/site/explore', handleAsync(async (req, res) => {
+  const payload = operatorSchema.parse(req.body ?? {});
+  const result = await exploreSite({ actor: payload.operator });
+
+  res.json({
+    ...buildStepResponse(result.state, 'site_explore'),
+    summary: result.summary,
+    metadata: result.metadata,
+  });
+}));
+
+router.post('/plan/generate', handleAsync(async (req, res) => {
+  const payload = operatorSchema.parse(req.body ?? {});
+  const result = await generatePlan({ actor: payload.operator });
+
+  res.json({
+    ...buildStepResponse(result.state, 'plan_generate'),
+    content: result.content,
+    llm: result.llm,
+  });
+}));
+
+router.post('/cases/generate', handleAsync(async (req, res) => {
+  const payload = operatorSchema.parse(req.body ?? {});
+  const result = await generateCases({ actor: payload.operator });
+
+  res.json({
+    ...buildStepResponse(result.state, 'cases_generate'),
+    markdown: result.markdown,
+    cases: result.cases,
+    llm: result.llm,
+  });
+}));
+
 router.post('/steps/:stepId/review', handleAsync(async (req, res) => {
   const payload = reviewSchema.parse(req.body);
   const stepId = parseStepId(readSingleRouteParam(req.params.stepId));
 
-  if (stepId !== 'requirements_normalize') {
-    throw new ApiError(501, 'review_not_implemented', `${stepId} 的审阅接口将在第二阶段实现。`);
-  }
+  let state: WorkflowState;
 
-  const state = await saveRequirementsReview({
-    content: payload.content,
-    actor: payload.operator,
-    notes: payload.notes,
-  });
+  switch (stepId) {
+    case 'requirements_normalize':
+      state = await saveRequirementsReview({
+        content: payload.content,
+        actor: payload.operator,
+        notes: payload.notes,
+      });
+      break;
+    case 'site_explore':
+      state = await saveSiteExploreReview({
+        content: payload.content,
+        actor: payload.operator,
+        notes: payload.notes,
+      });
+      break;
+    case 'plan_generate':
+      state = await savePlanReview({
+        content: payload.content,
+        actor: payload.operator,
+        notes: payload.notes,
+      });
+      break;
+    case 'cases_generate':
+      state = await saveCasesReview({
+        markdown: payload.content,
+        actor: payload.operator,
+        notes: payload.notes,
+      });
+      break;
+    default:
+      throw new ApiError(501, 'review_not_implemented', `${stepId} 的审阅接口暂未实现。`);
+  }
 
   res.json(buildStepResponse(state, stepId));
 }));

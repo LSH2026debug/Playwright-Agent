@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 
 import {
   approveStep,
+  exploreSite,
   fetchWorkflowState,
+  generateCases,
+  generatePlan,
   generateRequirements,
   initProject,
   reviewStep,
@@ -61,6 +64,9 @@ export default function App() {
   const [siteUrl, setSiteUrl] = useState('https://www.saucedemo.com/');
   const [rawRequirements, setRawRequirements] = useState('');
   const [normalizedRequirements, setNormalizedRequirements] = useState('');
+  const [siteExploreSummary, setSiteExploreSummary] = useState('');
+  const [planDocument, setPlanDocument] = useState('');
+  const [casesDocument, setCasesDocument] = useState('');
 
   useEffect(() => {
     void refreshWorkflow();
@@ -77,6 +83,9 @@ export default function App() {
       setSiteUrl(nextPayload.workflow.project?.siteUrl ?? 'https://www.saucedemo.com/');
       setRawRequirements(nextPayload.documents.rawRequirements ?? '');
       setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? '');
+      setSiteExploreSummary(nextPayload.documents.siteExploreSummary ?? '');
+      setPlanDocument(nextPayload.documents.planDocument ?? '');
+      setCasesDocument(nextPayload.documents.casesDocument ?? '');
 
       const suggestedStep = inferActiveStep(nextPayload);
       setActiveStep((currentStep) => (canAccessStep(nextPayload, currentStep) ? currentStep : suggestedStep));
@@ -143,6 +152,93 @@ export default function App() {
     });
   }
 
+  async function handleExploreSite() {
+    await runAction(async () => {
+      const response = await exploreSite(defaultOperator);
+      setSiteExploreSummary(response.summary);
+      await syncFromWorkflow(response.workflow, '站点探索已完成，请人工审阅后再批准。');
+    });
+  }
+
+  async function handleSaveSiteExploreReview() {
+    await runAction(async () => {
+      const response = await reviewStep({
+        stepId: 'site_explore',
+        content: siteExploreSummary,
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '站点探索审阅内容已保存。');
+    });
+  }
+
+  async function handleApproveSiteExplore() {
+    await runAction(async () => {
+      const response = await approveStep({
+        stepId: 'site_explore',
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '站点探索结果已批准，可以进入测试计划。');
+    });
+  }
+
+  async function handleGeneratePlan() {
+    await runAction(async () => {
+      const response = await generatePlan(defaultOperator);
+      setPlanDocument(response.content);
+      await syncFromWorkflow(response.workflow, `模块测试计划已生成，当前模式：${formatLlmMode(response.llm.mode)}`);
+    });
+  }
+
+  async function handleSavePlanReview() {
+    await runAction(async () => {
+      const response = await reviewStep({
+        stepId: 'plan_generate',
+        content: planDocument,
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '测试计划审阅内容已保存。');
+    });
+  }
+
+  async function handleApprovePlan() {
+    await runAction(async () => {
+      const response = await approveStep({
+        stepId: 'plan_generate',
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '测试计划已批准，可以进入测试用例生成。');
+    });
+  }
+
+  async function handleGenerateCases() {
+    await runAction(async () => {
+      const response = await generateCases(defaultOperator);
+      setCasesDocument(response.markdown);
+      await syncFromWorkflow(response.workflow, `结构化测试用例已生成，当前模式：${formatLlmMode(response.llm.mode)}`);
+    });
+  }
+
+  async function handleSaveCasesReview() {
+    await runAction(async () => {
+      const response = await reviewStep({
+        stepId: 'cases_generate',
+        content: casesDocument,
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '结构化测试用例审阅内容已保存。');
+    });
+  }
+
+  async function handleApproveCases() {
+    await runAction(async () => {
+      const response = await approveStep({
+        stepId: 'cases_generate',
+        operator: defaultOperator,
+      });
+      await syncFromWorkflow(response.workflow, '结构化测试用例已批准，可以进入脚本生成。');
+    });
+  }
+
   async function runAction(action: () => Promise<void>) {
     setBusy(true);
     setError(null);
@@ -159,14 +255,14 @@ export default function App() {
 
   async function syncFromWorkflow(workflow: WorkflowPayload['workflow'], message: string) {
     const nextPayload = await fetchWorkflowState();
-    setPayload({
-      ...nextPayload,
-      workflow,
-    });
+    setPayload(nextPayload);
     setProjectName(workflow.project?.name ?? 'ai-playwright-poc');
     setSiteUrl(workflow.project?.siteUrl ?? 'https://www.saucedemo.com/');
     setRawRequirements(nextPayload.documents.rawRequirements ?? '');
     setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? normalizedRequirements);
+    setSiteExploreSummary(nextPayload.documents.siteExploreSummary ?? siteExploreSummary);
+    setPlanDocument(nextPayload.documents.planDocument ?? planDocument);
+    setCasesDocument(nextPayload.documents.casesDocument ?? casesDocument);
     setNotice(message);
   }
 
@@ -179,7 +275,7 @@ export default function App() {
     <div className="app-shell">
       <aside className="step-rail">
         <div className="brand-block">
-          <p className="eyebrow">第一阶段</p>
+          <p className="eyebrow">Phase 2</p>
           <h1>AI Playwright POC</h1>
           <p>AI 生成与人工审批强绑定。没有批准，就没有下一步。</p>
         </div>
@@ -336,7 +432,7 @@ export default function App() {
               </button>
               <button
                 className="secondary"
-                disabled={busy || !canSaveReview(payload) || !normalizedRequirements.trim()}
+                disabled={busy || !canReviewStep(payload, 'requirements_normalize') || !normalizedRequirements.trim()}
                 onClick={handleReviewSave}
                 type="button"
               >
@@ -344,7 +440,7 @@ export default function App() {
               </button>
               <button
                 className="accent"
-                disabled={busy || !canApproveRequirements(payload)}
+                disabled={busy || !canApproveStepById(payload, 'requirements_normalize')}
                 onClick={handleApproveRequirements}
                 type="button"
               >
@@ -372,7 +468,160 @@ export default function App() {
           </section>
         ) : null}
 
-        {activeStep === 'site_explore' || activeStep === 'plan_generate' || activeStep === 'cases_generate' || activeStep === 'tests_generate' ? (
+        {activeStep === 'site_explore' ? (
+          <section className="panel-card">
+            <div className="panel-header">
+              <div>
+                <h3>站点探索</h3>
+                <p>使用 Playwright 对目标站点进行受控探索，生成摘要、页面元数据和截图。</p>
+              </div>
+            </div>
+
+            <div className="action-row action-row-tight">
+              <button className="primary" disabled={busy || !canGenerateSiteExplore(payload)} onClick={handleExploreSite} type="button">
+                {busy ? '处理中...' : '执行站点探索'}
+              </button>
+              <button
+                className="secondary"
+                disabled={busy || !canReviewStep(payload, 'site_explore') || !siteExploreSummary.trim()}
+                onClick={handleSaveSiteExploreReview}
+                type="button"
+              >
+                保存审阅
+              </button>
+              <button
+                className="accent"
+                disabled={busy || !canApproveStepById(payload, 'site_explore')}
+                onClick={handleApproveSiteExplore}
+                type="button"
+              >
+                批准当前步骤
+              </button>
+              <button
+                className="ghost"
+                disabled={!canGoNext(payload, 'site_explore')}
+                onClick={() => setActiveStep('plan_generate')}
+                type="button"
+              >
+                下一步
+              </button>
+            </div>
+
+            <label className="full-span">
+              <span>站点探索摘要</span>
+              <textarea
+                rows={16}
+                value={siteExploreSummary}
+                onChange={(event) => setSiteExploreSummary(event.target.value)}
+                placeholder="点击执行站点探索后，这里会出现可编辑的探索摘要。"
+              />
+            </label>
+          </section>
+        ) : null}
+
+        {activeStep === 'plan_generate' ? (
+          <section className="panel-card">
+            <div className="panel-header">
+              <div>
+                <h3>模块级测试计划</h3>
+                <p>基于已批准的规范化需求和站点探索结果生成模块级测试计划。</p>
+              </div>
+            </div>
+
+            <div className="action-row action-row-tight">
+              <button className="primary" disabled={busy || !canGeneratePlanStep(payload)} onClick={handleGeneratePlan} type="button">
+                {busy ? '处理中...' : '生成测试计划'}
+              </button>
+              <button
+                className="secondary"
+                disabled={busy || !canReviewStep(payload, 'plan_generate') || !planDocument.trim()}
+                onClick={handleSavePlanReview}
+                type="button"
+              >
+                保存审阅
+              </button>
+              <button
+                className="accent"
+                disabled={busy || !canApproveStepById(payload, 'plan_generate')}
+                onClick={handleApprovePlan}
+                type="button"
+              >
+                批准当前步骤
+              </button>
+              <button
+                className="ghost"
+                disabled={!canGoNext(payload, 'plan_generate')}
+                onClick={() => setActiveStep('cases_generate')}
+                type="button"
+              >
+                下一步
+              </button>
+            </div>
+
+            <label className="full-span">
+              <span>测试计划文档</span>
+              <textarea
+                rows={18}
+                value={planDocument}
+                onChange={(event) => setPlanDocument(event.target.value)}
+                placeholder="点击生成测试计划后，这里会出现可编辑的模块级测试计划。"
+              />
+            </label>
+          </section>
+        ) : null}
+
+        {activeStep === 'cases_generate' ? (
+          <section className="panel-card">
+            <div className="panel-header">
+              <div>
+                <h3>结构化测试用例</h3>
+                <p>基于已批准的测试计划生成结构化测试用例，并允许人工修订后批准。</p>
+              </div>
+            </div>
+
+            <div className="action-row action-row-tight">
+              <button className="primary" disabled={busy || !canGenerateCasesStep(payload)} onClick={handleGenerateCases} type="button">
+                {busy ? '处理中...' : '生成测试用例'}
+              </button>
+              <button
+                className="secondary"
+                disabled={busy || !canReviewStep(payload, 'cases_generate') || !casesDocument.trim()}
+                onClick={handleSaveCasesReview}
+                type="button"
+              >
+                保存审阅
+              </button>
+              <button
+                className="accent"
+                disabled={busy || !canApproveStepById(payload, 'cases_generate')}
+                onClick={handleApproveCases}
+                type="button"
+              >
+                批准当前步骤
+              </button>
+              <button
+                className="ghost"
+                disabled={!canGoNext(payload, 'cases_generate')}
+                onClick={() => setActiveStep('tests_generate')}
+                type="button"
+              >
+                下一步
+              </button>
+            </div>
+
+            <label className="full-span">
+              <span>结构化测试用例</span>
+              <textarea
+                rows={18}
+                value={casesDocument}
+                onChange={(event) => setCasesDocument(event.target.value)}
+                placeholder="点击生成测试用例后，这里会出现可编辑的结构化测试用例。"
+              />
+            </label>
+          </section>
+        ) : null}
+
+        {activeStep === 'tests_generate' ? (
           <section className="panel-card placeholder-card">
             <div className="panel-header">
               <div>
@@ -382,7 +631,7 @@ export default function App() {
             </div>
 
             <p>
-              第一阶段只实现到“规范化需求 + 人工审批闸门”。当前步骤的后端 API 与前端操作面板会在第二阶段继续补齐。
+              当前已完成到“结构化测试用例 + 人工审批闸门”。测试脚本生成与执行会在下一阶段继续补齐。
             </p>
           </section>
         ) : null}
@@ -447,7 +696,19 @@ function inferActiveStep(payload: WorkflowPayload): StepId {
     return 'requirements_normalize';
   }
 
-  return 'site_explore';
+  if (!isApprovedStatus(steps.site_explore.status)) {
+    return 'site_explore';
+  }
+
+  if (!isApprovedStatus(steps.plan_generate.status)) {
+    return 'plan_generate';
+  }
+
+  if (!isApprovedStatus(steps.cases_generate.status)) {
+    return 'cases_generate';
+  }
+
+  return 'tests_generate';
 }
 
 function canAccessStep(payload: WorkflowPayload | null, stepId: StepId): boolean {
@@ -498,24 +759,56 @@ function canGenerateRequirements(payload: WorkflowPayload | null): boolean {
     return false;
   }
 
-  return payload.workflow.steps.requirements_upload.status === 'completed';
+  const stepStatus = payload.workflow.steps.requirements_normalize.status;
+  return payload.workflow.steps.requirements_upload.status === 'completed'
+    && (stepStatus === 'draft' || stepStatus === 'ai_generated');
 }
 
-function canSaveReview(payload: WorkflowPayload | null): boolean {
+function canGenerateSiteExplore(payload: WorkflowPayload | null): boolean {
   if (!payload) {
     return false;
   }
 
-  const status = payload.workflow.steps.requirements_normalize.status;
+  const stepStatus = payload.workflow.steps.site_explore.status;
+  return isApprovedStatus(payload.workflow.steps.requirements_normalize.status)
+    && (stepStatus === 'draft' || stepStatus === 'ai_generated');
+}
+
+function canGeneratePlanStep(payload: WorkflowPayload | null): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  const stepStatus = payload.workflow.steps.plan_generate.status;
+  return isApprovedStatus(payload.workflow.steps.site_explore.status)
+    && (stepStatus === 'draft' || stepStatus === 'ai_generated');
+}
+
+function canGenerateCasesStep(payload: WorkflowPayload | null): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  const stepStatus = payload.workflow.steps.cases_generate.status;
+  return isApprovedStatus(payload.workflow.steps.plan_generate.status)
+    && (stepStatus === 'draft' || stepStatus === 'ai_generated');
+}
+
+function canReviewStep(payload: WorkflowPayload | null, stepId: StepId): boolean {
+  if (!payload) {
+    return false;
+  }
+
+  const status = payload.workflow.steps[stepId].status;
   return status === 'ai_generated' || status === 'human_reviewed';
 }
 
-function canApproveRequirements(payload: WorkflowPayload | null): boolean {
+function canApproveStepById(payload: WorkflowPayload | null, stepId: StepId): boolean {
   if (!payload) {
     return false;
   }
 
-  return payload.workflow.steps.requirements_normalize.status === 'human_reviewed';
+  return payload.workflow.steps[stepId].status === 'human_reviewed';
 }
 
 function formatStatus(status: StepStatus): string {

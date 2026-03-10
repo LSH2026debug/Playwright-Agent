@@ -1,4 +1,12 @@
-import type { NormalizeResponse, StepId, StepResponse, WorkflowPayload } from './types';
+import type {
+  CasesResponse,
+  NormalizeResponse,
+  PlanResponse,
+  SiteExploreResponse,
+  StepId,
+  StepResponse,
+  WorkflowPayload,
+} from './types';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
 
@@ -63,6 +71,36 @@ export function uploadRequirements(input: {
 
 export function generateRequirements(operator = 'local-user'): Promise<NormalizeResponse> {
   return request<NormalizeResponse>('/api/requirements/normalize', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ operator }),
+  });
+}
+
+export function exploreSite(operator = 'local-user'): Promise<SiteExploreResponse> {
+  return request<SiteExploreResponse>('/api/site/explore', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ operator }),
+  });
+}
+
+export function generatePlan(operator = 'local-user'): Promise<PlanResponse> {
+  return request<PlanResponse>('/api/plan/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ operator }),
+  });
+}
+
+export function generateCases(operator = 'local-user'): Promise<CasesResponse> {
+  return request<CasesResponse>('/api/cases/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

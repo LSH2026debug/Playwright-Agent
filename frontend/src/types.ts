@@ -13,7 +13,7 @@ export type StepStatus = 'draft' | 'ai_generated' | 'human_reviewed' | 'approved
 export interface ArtifactRef {
   label: string;
   path: string;
-  kind: 'markdown' | 'json' | 'yaml' | 'text';
+  kind: 'markdown' | 'json' | 'yaml' | 'text' | 'image';
 }
 
 export interface WorkflowLog {
@@ -66,6 +66,9 @@ export interface WorkflowPayload {
   documents: {
     rawRequirements: string | null;
     normalizedRequirements: string | null;
+    siteExploreSummary: string | null;
+    planDocument: string | null;
+    casesDocument: string | null;
   };
 }
 
@@ -79,6 +82,36 @@ export interface StepResponse {
 
 export interface NormalizeResponse extends StepResponse {
   content: string;
+  llm: {
+    mode: string;
+    provider: string;
+    model: string;
+    warning?: string;
+  };
+}
+
+export interface SiteExploreResponse extends StepResponse {
+  summary: string;
+  metadata: {
+    pages: Array<Record<string, unknown>>;
+    flows: Array<Record<string, unknown>>;
+    screenshots: string[];
+  };
+}
+
+export interface PlanResponse extends StepResponse {
+  content: string;
+  llm: {
+    mode: string;
+    provider: string;
+    model: string;
+    warning?: string;
+  };
+}
+
+export interface CasesResponse extends StepResponse {
+  markdown: string;
+  cases: Array<Record<string, unknown>>;
   llm: {
     mode: string;
     provider: string;

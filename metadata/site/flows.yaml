@@ -1,2 +1,22 @@
-flows: []
-
+flows:
+  - id: auth-login
+    name: 登录主流程
+    steps:
+      - https://www.saucedemo.com/ 登录页
+      - 输入用户名和密码
+      - 点击登录按钮
+      - 跳转到商品列表页
+  - id: catalog-cart
+    name: 商品浏览与加购流程
+    steps:
+      - 进入商品列表页
+      - 浏览商品卡片
+      - 点击加入购物车
+      - 进入购物车页
+  - id: checkout-complete
+    name: 结账完成流程
+    steps:
+      - 购物车页进入结账
+      - 填写结账信息
+      - 确认订单
+      - 进入完成页

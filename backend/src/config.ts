@@ -16,6 +16,11 @@ const aiMode: LlmMode = rawMode === 'mock' || rawMode === 'template' || rawMode 
 export const config = {
   port: Number(process.env.PORT ?? 3001),
   defaultOperator: process.env.DEFAULT_OPERATOR ?? 'local-user',
+  siteExplore: {
+    maxPages: Number(process.env.SITE_EXPLORE_MAX_PAGES ?? 4),
+    sauceDemoUsername: process.env.SITE_EXPLORE_SAUCEDEMO_USERNAME ?? 'standard_user',
+    sauceDemoPassword: process.env.SITE_EXPLORE_SAUCEDEMO_PASSWORD ?? 'secret_sauce',
+  },
   ai: {
     mode: aiMode,
     provider: process.env.AI_PROVIDER ?? 'openai-compatible',

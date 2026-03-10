@@ -209,6 +209,9 @@ export async function getWorkflowPayload(): Promise<WorkflowStatePayload> {
   const documents: WorkflowDocuments = {
     rawRequirements: await readText(paths.requirementsInputFile),
     normalizedRequirements: await readText(paths.normalizedRequirementsFile),
+    siteExploreSummary: await readText(paths.siteExploreSummaryFile),
+    planDocument: await readText(paths.plansFile),
+    casesDocument: await readText(paths.casesMarkdownFile),
   };
 
   return {

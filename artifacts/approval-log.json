@@ -3,12 +3,48 @@
     "stepId": "requirements_normalize",
     "action": "reviewed",
     "actor": "local-user",
-    "timestamp": "2026-03-10T03:10:42.240Z"
+    "timestamp": "2026-03-10T06:09:17.177Z"
   },
   {
     "stepId": "requirements_normalize",
     "action": "approved",
     "actor": "local-user",
-    "timestamp": "2026-03-10T03:10:42.252Z"
+    "timestamp": "2026-03-10T06:09:17.183Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.816Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.826Z"
+  },
+  {
+    "stepId": "plan_generate",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.854Z"
+  },
+  {
+    "stepId": "plan_generate",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.863Z"
+  },
+  {
+    "stepId": "cases_generate",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.891Z"
+  },
+  {
+    "stepId": "cases_generate",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.900Z"
   }
 ]
