@@ -1,5 +1,6 @@
 import type {
   CasesResponse,
+  LoginSessionResponse,
   NormalizeResponse,
   PlanResponse,
   SiteExploreResponse,
@@ -35,6 +36,8 @@ export function fetchWorkflowState(): Promise<WorkflowPayload> {
 export function initProject(input: {
   projectName: string;
   siteUrl: string;
+  requiresLogin?: boolean;
+  loginUrl?: string;
   operator?: string;
 }): Promise<StepResponse> {
   return request<StepResponse>('/api/project/init', {
@@ -79,13 +82,73 @@ export function generateRequirements(operator = 'local-user'): Promise<Normalize
   });
 }
 
-export function exploreSite(operator = 'local-user'): Promise<SiteExploreResponse> {
+export function exploreSite(input: {
+  operator?: string;
+  maxPages?: number;
+  login?: {
+    enabled?: boolean;
+    loginUrl?: string;
+    username?: string;
+    password?: string;
+    useStoredSession?: boolean;
+  };
+} = {}): Promise<SiteExploreResponse> {
   return request<SiteExploreResponse>('/api/site/explore', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ operator }),
+    body: JSON.stringify({
+      operator: input.operator ?? 'local-user',
+      maxPages: input.maxPages,
+      login: input.login,
+    }),
+  });
+}
+
+export function fetchLoginSessionStatus(): Promise<LoginSessionResponse> {
+  return request<LoginSessionResponse>('/api/site/login-session/status');
+}
+
+export function startLoginSession(input: {
+  operator?: string;
+  loginUrl?: string;
+}): Promise<LoginSessionResponse> {
+  return request<LoginSessionResponse>('/api/site/login-session/start', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operator: input.operator ?? 'local-user',
+      loginUrl: input.loginUrl,
+    }),
+  });
+}
+
+export function saveLoginSession(input: {
+  operator?: string;
+  closeBrowserAfterSave?: boolean;
+} = {}): Promise<LoginSessionResponse> {
+  return request<LoginSessionResponse>('/api/site/login-session/save', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operator: input.operator ?? 'local-user',
+      closeBrowserAfterSave: input.closeBrowserAfterSave,
+    }),
+  });
+}
+
+export function clearLoginSession(): Promise<LoginSessionResponse> {
+  return request<LoginSessionResponse>('/api/site/login-session/clear', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
   });
 }
 

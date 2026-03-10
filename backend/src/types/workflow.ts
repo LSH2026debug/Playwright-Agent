@@ -55,10 +55,16 @@ export interface StepState {
   updatedAt: string;
 }
 
+export interface ProjectAuthConfig {
+  requiresLogin: boolean;
+  loginUrl: string | null;
+}
+
 export interface ProjectMetadata {
   name: string;
   siteUrl: string;
   operator: string;
+  auth: ProjectAuthConfig;
   createdAt: string;
   updatedAt: string;
 }
@@ -70,10 +76,52 @@ export interface WorkflowState {
   updatedAt: string;
 }
 
+export interface LlmGenerationMeta {
+  generatedAt: string;
+  mode: string;
+  provider: string;
+  model: string;
+  warning?: string;
+  count?: number;
+}
+
+export interface LoginSessionMeta {
+  mode: 'manual';
+  browserOpen: boolean;
+  profileReady: boolean;
+  loginUrl: string | null;
+  currentUrl: string | null;
+  profilePath: string | null;
+  storageStatePath: string | null;
+  openedAt: string | null;
+  savedAt: string | null;
+  updatedAt: string | null;
+  authenticatedLikely: boolean;
+  note?: string;
+}
+
+export interface SiteExploreMeta {
+  exploredAt: string;
+  siteUrl: string;
+  maxPagesRequested: number;
+  screenshotCount: number;
+  pagesCount: number;
+  flowsCount: number;
+  requiresLogin: boolean;
+  authenticated: boolean;
+  loginUrlUsed: string | null;
+  authMethod: 'none' | 'credentials' | 'manual_session';
+}
+
 export interface WorkflowDocuments {
   rawRequirements: string | null;
   normalizedRequirements: string | null;
+  normalizedRequirementsMeta: LlmGenerationMeta | null;
+  loginSessionMeta: LoginSessionMeta | null;
   siteExploreSummary: string | null;
+  siteExploreMeta: SiteExploreMeta | null;
   planDocument: string | null;
+  planMeta: LlmGenerationMeta | null;
   casesDocument: string | null;
+  casesMeta: LlmGenerationMeta | null;
 }

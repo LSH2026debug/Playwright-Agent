@@ -1,8 +1,0 @@
-{
-  "generatedAt": "2026-03-10T06:09:22.881Z",
-  "count": 10,
-  "mode": "template",
-  "provider": "openai-compatible",
-  "model": "gpt-4.1-mini",
-  "warning": "未配置 AI_API_KEY，已自动回退到模板生成。"
-}

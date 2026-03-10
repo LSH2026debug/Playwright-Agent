@@ -2,18 +2,24 @@ import { useEffect, useState } from 'react';
 
 import {
   approveStep,
+  clearLoginSession,
   exploreSite,
+  fetchLoginSessionStatus,
   fetchWorkflowState,
   generateCases,
   generatePlan,
   generateRequirements,
   initProject,
   reviewStep,
+  saveLoginSession,
+  startLoginSession,
   uploadRequirements,
 } from './api';
-import type { StepId, StepStatus, WorkflowPayload } from './types';
+import type { LlmGenerationMeta, LoginSessionMeta, SiteExploreMeta, StepId, StepStatus, WorkflowPayload } from './types';
 
 const defaultOperator = 'local-user';
+const defaultExploreMaxPages = 12;
+const maxExplorePagesLimit = 30;
 
 const stepSequence: Array<{ id: StepId; label: string; description: string }> = [
   {
@@ -62,11 +68,24 @@ export default function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [projectName, setProjectName] = useState('ai-playwright-poc');
   const [siteUrl, setSiteUrl] = useState('https://www.saucedemo.com/');
+  const [requiresLogin, setRequiresLogin] = useState(false);
+  const [loginUrl, setLoginUrl] = useState('');
   const [rawRequirements, setRawRequirements] = useState('');
   const [normalizedRequirements, setNormalizedRequirements] = useState('');
+  const [normalizedRequirementsMeta, setNormalizedRequirementsMeta] = useState<LlmGenerationMeta | null>(null);
+  const [loginSessionMeta, setLoginSessionMeta] = useState<LoginSessionMeta | null>(null);
   const [siteExploreSummary, setSiteExploreSummary] = useState('');
+  const [siteExploreMeta, setSiteExploreMeta] = useState<SiteExploreMeta | null>(null);
+  const [exploreMaxPages, setExploreMaxPages] = useState(String(defaultExploreMaxPages));
+  const [exploreUseLogin, setExploreUseLogin] = useState(false);
+  const [exploreUseStoredSession, setExploreUseStoredSession] = useState(false);
+  const [exploreLoginUrl, setExploreLoginUrl] = useState('');
+  const [exploreUsername, setExploreUsername] = useState('');
+  const [explorePassword, setExplorePassword] = useState('');
   const [planDocument, setPlanDocument] = useState('');
+  const [planMeta, setPlanMeta] = useState<LlmGenerationMeta | null>(null);
   const [casesDocument, setCasesDocument] = useState('');
+  const [casesMeta, setCasesMeta] = useState<LlmGenerationMeta | null>(null);
 
   useEffect(() => {
     void refreshWorkflow();
@@ -81,11 +100,22 @@ export default function App() {
       setPayload(nextPayload);
       setProjectName(nextPayload.workflow.project?.name ?? 'ai-playwright-poc');
       setSiteUrl(nextPayload.workflow.project?.siteUrl ?? 'https://www.saucedemo.com/');
+      setRequiresLogin(nextPayload.workflow.project?.auth.requiresLogin ?? false);
+      setLoginUrl(nextPayload.workflow.project?.auth.loginUrl ?? '');
       setRawRequirements(nextPayload.documents.rawRequirements ?? '');
       setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? '');
+      setNormalizedRequirementsMeta(nextPayload.documents.normalizedRequirementsMeta ?? null);
+      setLoginSessionMeta(nextPayload.documents.loginSessionMeta ?? null);
       setSiteExploreSummary(nextPayload.documents.siteExploreSummary ?? '');
+      setSiteExploreMeta(nextPayload.documents.siteExploreMeta ?? null);
+      setExploreMaxPages(String(nextPayload.documents.siteExploreMeta?.maxPagesRequested ?? defaultExploreMaxPages));
+      setExploreUseLogin(nextPayload.workflow.project?.auth.requiresLogin ?? false);
+      setExploreUseStoredSession(nextPayload.documents.loginSessionMeta?.profileReady ?? false);
+      setExploreLoginUrl(nextPayload.workflow.project?.auth.loginUrl ?? nextPayload.workflow.project?.siteUrl ?? '');
       setPlanDocument(nextPayload.documents.planDocument ?? '');
+      setPlanMeta(nextPayload.documents.planMeta ?? null);
       setCasesDocument(nextPayload.documents.casesDocument ?? '');
+      setCasesMeta(nextPayload.documents.casesMeta ?? null);
 
       const suggestedStep = inferActiveStep(nextPayload);
       setActiveStep((currentStep) => (canAccessStep(nextPayload, currentStep) ? currentStep : suggestedStep));
@@ -102,6 +132,8 @@ export default function App() {
       const response = await initProject({
         projectName,
         siteUrl,
+        requiresLogin,
+        loginUrl: requiresLogin ? loginUrl.trim() || siteUrl.trim() : undefined,
         operator: defaultOperator,
       });
       await syncFromWorkflow(response.workflow, '项目已初始化。');
@@ -154,10 +186,65 @@ export default function App() {
 
   async function handleExploreSite() {
     await runAction(async () => {
-      const response = await exploreSite(defaultOperator);
+      const shouldUseLogin = exploreUseStoredSession || exploreUseLogin;
+      const requestedMaxPages = parseExploreMaxPages(exploreMaxPages);
+
+      const response = await exploreSite({
+        operator: defaultOperator,
+        maxPages: requestedMaxPages,
+        login: {
+          enabled: shouldUseLogin,
+          useStoredSession: exploreUseStoredSession,
+          loginUrl: shouldUseLogin ? exploreLoginUrl.trim() || loginUrl.trim() || siteUrl.trim() : undefined,
+          username: shouldUseLogin && !exploreUseStoredSession ? exploreUsername.trim() : undefined,
+          password: shouldUseLogin && !exploreUseStoredSession ? explorePassword : undefined,
+        },
+      });
+      setExploreMaxPages(String(requestedMaxPages));
       setSiteExploreSummary(response.summary);
       await syncFromWorkflow(response.workflow, '站点探索已完成，请人工审阅后再批准。');
     });
+  }
+
+  async function handleOpenLoginBrowser() {
+    await runAction(async () => {
+      const response = await startLoginSession({
+        operator: defaultOperator,
+        loginUrl: exploreLoginUrl.trim() || loginUrl.trim() || siteUrl.trim(),
+      });
+      setLoginSessionMeta(response.session);
+      setExploreUseLogin(true);
+      await refreshLoginSessionStatus();
+      setNotice('登录浏览器已打开，请在新窗口中手动完成登录。');
+    });
+  }
+
+  async function handleSaveLoginSession() {
+    await runAction(async () => {
+      const response = await saveLoginSession({
+        operator: defaultOperator,
+      });
+      setLoginSessionMeta(response.session);
+      setExploreUseLogin(true);
+      setExploreUseStoredSession(true);
+      await refreshWorkflow();
+      setNotice('已保存登录态，执行站点探索时会优先复用该登录态。');
+    });
+  }
+
+  async function handleClearLoginSession() {
+    await runAction(async () => {
+      const response = await clearLoginSession();
+      setLoginSessionMeta(response.session);
+      setExploreUseStoredSession(false);
+      await refreshLoginSessionStatus();
+      setNotice('已清除保存的登录态。');
+    });
+  }
+
+  async function refreshLoginSessionStatus() {
+    const response = await fetchLoginSessionStatus();
+    setLoginSessionMeta(response.session);
   }
 
   async function handleSaveSiteExploreReview() {
@@ -258,11 +345,22 @@ export default function App() {
     setPayload(nextPayload);
     setProjectName(workflow.project?.name ?? 'ai-playwright-poc');
     setSiteUrl(workflow.project?.siteUrl ?? 'https://www.saucedemo.com/');
+    setRequiresLogin(workflow.project?.auth.requiresLogin ?? false);
+    setLoginUrl(workflow.project?.auth.loginUrl ?? '');
     setRawRequirements(nextPayload.documents.rawRequirements ?? '');
-    setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? normalizedRequirements);
-    setSiteExploreSummary(nextPayload.documents.siteExploreSummary ?? siteExploreSummary);
-    setPlanDocument(nextPayload.documents.planDocument ?? planDocument);
-    setCasesDocument(nextPayload.documents.casesDocument ?? casesDocument);
+    setNormalizedRequirements(nextPayload.documents.normalizedRequirements ?? '');
+    setNormalizedRequirementsMeta(nextPayload.documents.normalizedRequirementsMeta ?? null);
+    setLoginSessionMeta(nextPayload.documents.loginSessionMeta ?? null);
+    setSiteExploreSummary(nextPayload.documents.siteExploreSummary ?? '');
+    setSiteExploreMeta(nextPayload.documents.siteExploreMeta ?? null);
+    setExploreMaxPages(String(nextPayload.documents.siteExploreMeta?.maxPagesRequested ?? defaultExploreMaxPages));
+    setExploreUseLogin(workflow.project?.auth.requiresLogin ?? false);
+    setExploreUseStoredSession(nextPayload.documents.loginSessionMeta?.profileReady ?? false);
+    setExploreLoginUrl(workflow.project?.auth.loginUrl ?? workflow.project?.siteUrl ?? '');
+    setPlanDocument(nextPayload.documents.planDocument ?? '');
+    setPlanMeta(nextPayload.documents.planMeta ?? null);
+    setCasesDocument(nextPayload.documents.casesDocument ?? '');
+    setCasesMeta(nextPayload.documents.casesMeta ?? null);
     setNotice(message);
   }
 
@@ -354,6 +452,32 @@ export default function App() {
                 />
               </label>
 
+              <label className="checkbox-field full-span">
+                <input
+                  checked={requiresLogin}
+                  onChange={(event) => {
+                    const nextChecked = event.target.checked;
+                    setRequiresLogin(nextChecked);
+                    if (nextChecked && !loginUrl.trim()) {
+                      setLoginUrl(siteUrl);
+                    }
+                  }}
+                  type="checkbox"
+                />
+                <span>该站点需要登录后再做探索</span>
+              </label>
+
+              {requiresLogin ? (
+                <label className="full-span">
+                  <span>登录页 URL</span>
+                  <input
+                    value={loginUrl}
+                    onChange={(event) => setLoginUrl(event.target.value)}
+                    placeholder="默认可与网站 URL 相同"
+                  />
+                </label>
+              ) : null}
+
               <div className="action-row">
                 <button className="primary" disabled={busy} type="submit">
                   {busy ? '处理中...' : '初始化项目'}
@@ -426,6 +550,8 @@ export default function App() {
               </div>
             </div>
 
+            <GenerationMetaPanel meta={normalizedRequirementsMeta} title="本次规范化生成信息" />
+
             <div className="action-row action-row-tight">
               <button className="primary" disabled={busy || !canGenerateRequirements(payload)} onClick={handleGenerateRequirements} type="button">
                 {busy ? '处理中...' : 'AI 生成'}
@@ -477,6 +603,141 @@ export default function App() {
               </div>
             </div>
 
+            <section className="sub-panel">
+              <div className="sub-panel-header">
+                <div>
+                  <h4>本次探索范围</h4>
+                  <p>这里控制本次执行最多尝试探索多少页。它是一次请求参数，不会替代环境变量默认值；如果站点本身可达页面不足，实际探索页数会小于这个值。</p>
+                </div>
+              </div>
+
+              <div className="form-grid compact-grid">
+                <label>
+                  <span>本次最多探索页数</span>
+                  <input
+                    inputMode="numeric"
+                    max={maxExplorePagesLimit}
+                    min={1}
+                    onChange={(event) => setExploreMaxPages(event.target.value)}
+                    placeholder={String(defaultExploreMaxPages)}
+                    type="number"
+                    value={exploreMaxPages}
+                  />
+                  <small className="field-hint">支持 1 到 {maxExplorePagesLimit} 的整数；未改动时默认使用 {defaultExploreMaxPages}。</small>
+                </label>
+              </div>
+            </section>
+
+            <section className="sub-panel">
+              <div className="sub-panel-header">
+                <div>
+                  <h4>人工登录接管</h4>
+                  <p>更稳的方式是先打开真实浏览器手动登录，再把登录态保存下来给探索步骤复用。适合验证码、SSO、MFA 或登录页经常变动的站点。</p>
+                </div>
+              </div>
+
+              <LoginSessionPanel meta={loginSessionMeta} />
+
+              <div className="action-row action-row-tight">
+                <button className="primary" disabled={busy || !exploreUseLogin} onClick={handleOpenLoginBrowser} type="button">
+                  {busy ? '处理中...' : '打开登录浏览器'}
+                </button>
+                <button className="secondary" disabled={busy || !exploreUseLogin || !loginSessionMeta?.browserOpen} onClick={handleSaveLoginSession} type="button">
+                  保存当前登录态
+                </button>
+                <button className="ghost" disabled={busy || (!loginSessionMeta?.browserOpen && !loginSessionMeta?.profileReady)} onClick={handleClearLoginSession} type="button">
+                  清除登录态
+                </button>
+              </div>
+
+              <label className="checkbox-field full-span">
+                <input
+                  checked={exploreUseStoredSession}
+                  disabled={!loginSessionMeta?.profileReady}
+                  onChange={(event) => {
+                    const nextChecked = event.target.checked;
+                    setExploreUseStoredSession(nextChecked);
+                    if (nextChecked) {
+                      setExploreUseLogin(false);
+                    }
+                  }}
+                  type="checkbox"
+                />
+                <span>执行探索时优先复用已保存登录态</span>
+              </label>
+            </section>
+
+            <section className="sub-panel">
+              <div className="sub-panel-header">
+                <div>
+                  <h4>快捷方式：直接填写账号密码</h4>
+                  <p>仅适合普通用户名密码表单。密码只用于当前探索请求，不写入工件或审批日志。若上方已勾选复用登录态，这一块会被忽略。</p>
+                </div>
+              </div>
+
+              {exploreUseStoredSession ? (
+                <section className="meta-panel meta-panel-empty">
+                  <strong>当前已选择复用上方登录态</strong>
+                  <span>本次探索不会再使用下面的用户名和密码。需要切回快捷登录时，先取消勾选上方“执行探索时优先复用已保存登录态”。</span>
+                </section>
+              ) : null}
+
+              <div className="form-grid compact-grid">
+                <label className="checkbox-field full-span">
+                  <input
+                    disabled={exploreUseStoredSession}
+                    checked={exploreUseLogin}
+                    onChange={(event) => {
+                      const nextChecked = event.target.checked;
+                      setExploreUseLogin(nextChecked);
+                      if (nextChecked && !exploreLoginUrl.trim()) {
+                        setExploreLoginUrl(loginUrl.trim() || siteUrl.trim());
+                      }
+                    }}
+                    type="checkbox"
+                  />
+                  <span>本次探索需要先登录</span>
+                </label>
+
+                {exploreUseLogin ? (
+                  <>
+                    <label className="full-span">
+                      <span>本次登录页 URL</span>
+                      <input
+                        disabled={exploreUseStoredSession}
+                        value={exploreLoginUrl}
+                        onChange={(event) => setExploreLoginUrl(event.target.value)}
+                        placeholder="默认使用项目初始化中的登录页 URL"
+                      />
+                    </label>
+
+                    <label>
+                      <span>用户名</span>
+                      <input
+                        disabled={exploreUseStoredSession}
+                        value={exploreUsername}
+                        onChange={(event) => setExploreUsername(event.target.value)}
+                        placeholder="输入可登录的用户名"
+                      />
+                    </label>
+
+                    <label>
+                      <span>密码</span>
+                      <input
+                        disabled={exploreUseStoredSession}
+                        type="password"
+                        value={explorePassword}
+                        onChange={(event) => setExplorePassword(event.target.value)}
+                        placeholder="输入密码，仅本次请求使用"
+                      />
+                    </label>
+                  </>
+                ) : null}
+              </div>
+            </section>
+
+            <SiteExploreMetaPanel meta={siteExploreMeta} />
+
             <div className="action-row action-row-tight">
               <button className="primary" disabled={busy || !canGenerateSiteExplore(payload)} onClick={handleExploreSite} type="button">
                 {busy ? '处理中...' : '执行站点探索'}
@@ -524,9 +785,11 @@ export default function App() {
             <div className="panel-header">
               <div>
                 <h3>模块级测试计划</h3>
-                <p>基于已批准的规范化需求和站点探索结果生成模块级测试计划。</p>
+                <p>基于已批准的规范化需求和站点探索结果，按当前 .env 中的 AI 提供方与模型配置生成模块级测试计划。</p>
               </div>
             </div>
+
+            <GenerationMetaPanel meta={planMeta} title="本次测试计划生成信息" />
 
             <div className="action-row action-row-tight">
               <button className="primary" disabled={busy || !canGeneratePlanStep(payload)} onClick={handleGeneratePlan} type="button">
@@ -578,6 +841,8 @@ export default function App() {
                 <p>基于已批准的测试计划生成结构化测试用例，并允许人工修订后批准。</p>
               </div>
             </div>
+
+            <GenerationMetaPanel meta={casesMeta} title="本次测试用例生成信息" />
 
             <div className="action-row action-row-tight">
               <button className="primary" disabled={busy || !canGenerateCasesStep(payload)} onClick={handleGenerateCases} type="button">
@@ -837,5 +1102,110 @@ function formatLlmMode(mode: string): string {
       return '模板降级模式';
     default:
       return mode;
+  }
+}
+
+function parseExploreMaxPages(value: string): number {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > maxExplorePagesLimit) {
+    throw new Error(`探索页数必须是 1 到 ${maxExplorePagesLimit} 之间的整数。`);
+  }
+
+  return parsed;
+}
+
+function GenerationMetaPanel(input: {
+  meta: LlmGenerationMeta | null;
+  title: string;
+}) {
+  if (!input.meta) {
+    return (
+      <section className="meta-panel meta-panel-empty">
+        <strong>{input.title}</strong>
+        <span>尚未生成，点击上方按钮后会显示生成方式、提供方、模型和时间。</span>
+      </section>
+    );
+  }
+
+  return (
+    <section className="meta-panel">
+      <strong>{input.title}</strong>
+      <div className="meta-grid">
+        <span>生成方式：{formatLlmMode(input.meta.mode)}</span>
+        <span>提供方：{input.meta.provider}</span>
+        <span>模型：{input.meta.model}</span>
+        <span>生成时间：{formatTimestamp(input.meta.generatedAt)}</span>
+      </div>
+      {typeof input.meta.count === 'number' ? <span>生成条目数：{input.meta.count}</span> : null}
+      {input.meta.warning ? <p className="meta-warning">提示：{input.meta.warning}</p> : null}
+    </section>
+  );
+}
+
+function SiteExploreMetaPanel(input: {
+  meta: SiteExploreMeta | null;
+}) {
+  if (!input.meta) {
+    return null;
+  }
+
+  return (
+    <section className="meta-panel">
+      <strong>最近一次站点探索信息</strong>
+      <div className="meta-grid">
+        <span>探索时间：{formatTimestamp(input.meta.exploredAt)}</span>
+        <span>本次探索上限：{input.meta.maxPagesRequested}</span>
+        <span>页面数：{input.meta.pagesCount}</span>
+        <span>截图数：{input.meta.screenshotCount}</span>
+        <span>流程数：{input.meta.flowsCount}</span>
+        <span>登录方式：{formatAuthMethod(input.meta.authMethod)}</span>
+        <span>是否要求登录：{input.meta.requiresLogin ? '是' : '否'}</span>
+        <span>登录结果：{input.meta.requiresLogin ? (input.meta.authenticated ? '成功' : '未成功') : '未启用登录'}</span>
+      </div>
+      {input.meta.loginUrlUsed ? <span>登录页：{input.meta.loginUrlUsed}</span> : null}
+    </section>
+  );
+}
+
+function LoginSessionPanel(input: {
+  meta: LoginSessionMeta | null;
+}) {
+  if (!input.meta) {
+    return (
+      <section className="meta-panel meta-panel-empty">
+        <strong>当前没有保存的登录态</strong>
+        <span>点击“打开登录浏览器”后，在新窗口中手动登录，再回来点击“保存当前登录态”。</span>
+      </section>
+    );
+  }
+
+  return (
+    <section className="meta-panel">
+      <strong>人工登录态状态</strong>
+      <div className="meta-grid">
+        <span>浏览器状态：{input.meta.browserOpen ? '已打开' : '未打开'}</span>
+        <span>登录态状态：{input.meta.profileReady ? '已保存' : '未保存'}</span>
+        <span>登录页：{input.meta.loginUrl ?? '未设置'}</span>
+        <span>当前 URL：{input.meta.currentUrl ?? '未获取到'}</span>
+        <span>人工登录可信度：{input.meta.authenticatedLikely ? '疑似已登录' : '尚未明显检测到登录成功'}</span>
+        <span>最近更新时间：{input.meta.updatedAt ? formatTimestamp(input.meta.updatedAt) : '暂无'}</span>
+      </div>
+      {input.meta.note ? <p className="meta-warning">提示：{input.meta.note}</p> : null}
+    </section>
+  );
+}
+
+function formatTimestamp(value: string): string {
+  return new Date(value).toLocaleString('zh-CN');
+}
+
+function formatAuthMethod(method: 'none' | 'credentials' | 'manual_session'): string {
+  switch (method) {
+    case 'credentials':
+      return '直接填写账号密码';
+    case 'manual_session':
+      return '复用人工登录态';
+    default:
+      return '未启用登录';
   }
 }

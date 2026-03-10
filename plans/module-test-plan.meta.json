@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-03-10T06:09:22.842Z",
+  "generatedAt": "2026-03-10T10:01:29.574Z",
   "mode": "template",
-  "provider": "openai-compatible",
-  "model": "gpt-4.1-mini",
-  "warning": "未配置 AI_API_KEY，已自动回退到模板生成。"
+  "provider": "moonshot",
+  "model": "moonshot-v1-32k",
+  "warning": "实时 LLM 请求失败，已回退到模板生成：上游 LLM 请求失败，状态码为 429。"
 }

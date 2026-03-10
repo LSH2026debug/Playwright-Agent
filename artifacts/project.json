@@ -1,7 +1,11 @@
 {
-  "name": "ai-playwright-poc",
-  "siteUrl": "https://www.saucedemo.com/",
+  "name": "星宫",
+  "siteUrl": "https://zodiactest.ny-zodiac.com:8443/index",
   "operator": "local-user",
+  "auth": {
+    "requiresLogin": true,
+    "loginUrl": "https://zodiactest.ny-zodiac.com:8443/index"
+  },
   "createdAt": "2026-03-10T06:09:17.138Z",
-  "updatedAt": "2026-03-10T06:09:17.138Z"
+  "updatedAt": "2026-03-10T08:06:26.468Z"
 }

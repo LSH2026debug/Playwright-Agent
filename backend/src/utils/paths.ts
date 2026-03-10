@@ -5,6 +5,10 @@ const rootDir = path.resolve(process.cwd(), '..');
 export const paths = {
   rootDir,
   artifactsDir: path.join(rootDir, 'artifacts'),
+  authArtifactsDir: path.join(rootDir, 'artifacts', 'auth'),
+  authBrowserProfileDir: path.join(rootDir, 'artifacts', 'auth', 'browser-profile'),
+  authStorageStateFile: path.join(rootDir, 'artifacts', 'auth', 'storage-state.json'),
+  loginSessionMetaFile: path.join(rootDir, 'artifacts', 'auth', 'login-session.json'),
   logsDir: path.join(rootDir, 'artifacts', 'logs'),
   projectMetaFile: path.join(rootDir, 'artifacts', 'project.json'),
   workflowStateFile: path.join(rootDir, 'artifacts', 'workflow-state.json'),

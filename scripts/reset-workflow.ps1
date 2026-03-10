@@ -31,6 +31,11 @@ if (Test-Path $screenshotDir) {
   Get-ChildItem -Path $screenshotDir -Filter '*.png' | Remove-Item -Force
 }
 
+$authDir = Join-Path $root 'artifacts/auth'
+if (Test-Path $authDir) {
+  Remove-Item -Path $authDir -Recurse -Force
+}
+
 $message = [string]::Concat(
   [char]0x5DF2, [char]0x91CD, [char]0x7F6E, [char]0x7B2C, [char]0x4E00,
   [char]0x81F3, [char]0x7B2C, [char]0x4E8C, [char]0x9636, [char]0x6BB5,

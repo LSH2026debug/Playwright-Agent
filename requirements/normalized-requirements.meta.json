@@ -1,7 +1,6 @@
 {
-  "generatedAt": "2026-03-10T06:09:17.168Z",
-  "mode": "template",
-  "provider": "openai-compatible",
-  "model": "gpt-4.1-mini",
-  "warning": "未配置 AI_API_KEY，已自动回退到模板生成。"
+  "generatedAt": "2026-03-10T08:06:47.182Z",
+  "mode": "live",
+  "provider": "moonshot",
+  "model": "moonshot-v1-32k"
 }

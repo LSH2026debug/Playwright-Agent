@@ -1,22 +1,15 @@
 flows:
-  - id: auth-login
-    name: 登录主流程
+  - id: entry-navigation
+    name: 登录后关键页面浏览
     steps:
-      - https://www.saucedemo.com/ 登录页
-      - 输入用户名和密码
-      - 点击登录按钮
-      - 跳转到商品列表页
-  - id: catalog-cart
-    name: 商品浏览与加购流程
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/index）
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/AllInOne）
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/Aippt）
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/data/KBChat）
+  - id: content-sampling
+    name: 关键页面抽样检查
     steps:
-      - 进入商品列表页
-      - 浏览商品卡片
-      - 点击加入购物车
-      - 进入购物车页
-  - id: checkout-complete
-    name: 结账完成流程
-    steps:
-      - 购物车页进入结账
-      - 填写结账信息
-      - 确认订单
-      - 进入完成页
+      - 检查页面 home 的标题、标题层级和可见操作提示
+      - 检查页面 all-in-one 的标题、标题层级和可见操作提示
+      - 检查页面 ai-ppt 的标题、标题层级和可见操作提示
+      - 检查页面 private-search 的标题、标题层级和可见操作提示

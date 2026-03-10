@@ -1,0 +1,14 @@
+{
+  "mode": "manual",
+  "browserOpen": false,
+  "profileReady": true,
+  "loginUrl": "https://zodiactest.ny-zodiac.com:8443/index",
+  "currentUrl": "https://zodiactest.ny-zodiac.com:8443/index",
+  "profilePath": "artifacts/auth/browser-profile",
+  "storageStatePath": "artifacts/auth/storage-state.json",
+  "openedAt": "2026-03-10T09:08:21.046Z",
+  "savedAt": "2026-03-10T09:08:35.056Z",
+  "updatedAt": "2026-03-10T09:08:35.509Z",
+  "authenticatedLikely": true,
+  "note": "已保存登录态，执行站点探索时可优先复用该登录态。 登录浏览器已关闭。"
+}

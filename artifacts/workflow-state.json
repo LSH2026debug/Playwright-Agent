@@ -1,10 +1,14 @@
 {
   "project": {
-    "name": "ai-playwright-poc",
-    "siteUrl": "https://www.saucedemo.com/",
+    "name": "星宫",
+    "siteUrl": "https://zodiactest.ny-zodiac.com:8443/index",
     "operator": "local-user",
+    "auth": {
+      "requiresLogin": true,
+      "loginUrl": "https://zodiactest.ny-zodiac.com:8443/index"
+    },
     "createdAt": "2026-03-10T06:09:17.138Z",
-    "updatedAt": "2026-03-10T06:09:17.138Z"
+    "updatedAt": "2026-03-10T08:06:26.468Z"
   },
   "steps": {
     "project_init": {
@@ -19,7 +23,7 @@
         }
       ],
       "approvals": [],
-      "updatedAt": "2026-03-10T06:09:17.138Z"
+      "updatedAt": "2026-03-10T08:06:26.468Z"
     },
     "requirements_upload": {
       "id": "requirements_upload",
@@ -33,7 +37,7 @@
         }
       ],
       "approvals": [],
-      "updatedAt": "2026-03-10T06:09:17.158Z"
+      "updatedAt": "2026-03-10T08:06:29.965Z"
     },
     "requirements_normalize": {
       "id": "requirements_normalize",
@@ -56,16 +60,16 @@
           "stepId": "requirements_normalize",
           "action": "reviewed",
           "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:17.177Z"
+          "timestamp": "2026-03-10T08:06:55.648Z"
         },
         {
           "stepId": "requirements_normalize",
           "action": "approved",
           "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:17.183Z"
+          "timestamp": "2026-03-10T08:06:56.457Z"
         }
       ],
-      "updatedAt": "2026-03-10T06:09:17.183Z"
+      "updatedAt": "2026-03-10T08:06:56.457Z"
     },
     "site_explore": {
       "id": "site_explore",
@@ -94,22 +98,152 @@
         },
         {
           "label": "站点截图 1",
-          "path": "metadata/screenshots/login.png",
+          "path": "metadata/screenshots/home.png",
           "kind": "image"
         },
         {
           "label": "站点截图 2",
-          "path": "metadata/screenshots/inventory.png",
+          "path": "metadata/screenshots/all-in-one.png",
           "kind": "image"
         },
         {
           "label": "站点截图 3",
-          "path": "metadata/screenshots/cart.png",
+          "path": "metadata/screenshots/ai-ppt.png",
           "kind": "image"
         },
         {
           "label": "站点截图 4",
-          "path": "metadata/screenshots/checkout-step-one.png",
+          "path": "metadata/screenshots/private-search.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 5",
+          "path": "metadata/screenshots/knowledge-base-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 6",
+          "path": "metadata/screenshots/file-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 7",
+          "path": "metadata/screenshots/q-a-history.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 8",
+          "path": "metadata/screenshots/authorization-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 9",
+          "path": "metadata/screenshots/knowledge-graph.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 10",
+          "path": "metadata/screenshots/ai-apps.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 11",
+          "path": "metadata/screenshots/personal-space.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 12",
+          "path": "metadata/screenshots/agent-ctreation.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 13",
+          "path": "metadata/screenshots/agent-publish-application.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 14",
+          "path": "metadata/screenshots/agent-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 15",
+          "path": "metadata/screenshots/my-approval-tasks.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 16",
+          "path": "metadata/screenshots/agent-api-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 17",
+          "path": "metadata/screenshots/sensitive-word-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 18",
+          "path": "metadata/screenshots/mcp-marketplace.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 19",
+          "path": "metadata/screenshots/personal-center.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 20",
+          "path": "metadata/screenshots/management-center.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 21",
+          "path": "metadata/screenshots/authorization-approval.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 22",
+          "path": "metadata/screenshots/chatbi.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 23",
+          "path": "metadata/screenshots/database-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 24",
+          "path": "metadata/screenshots/table-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 25",
+          "path": "metadata/screenshots/field-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 26",
+          "path": "metadata/screenshots/role-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 27",
+          "path": "metadata/screenshots/function-configuration.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 28",
+          "path": "metadata/screenshots/permission-configuration.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 29",
+          "path": "metadata/screenshots/template-management.png",
+          "kind": "image"
+        },
+        {
+          "label": "站点截图 30",
+          "path": "metadata/screenshots/resource-management.png",
           "kind": "image"
         }
       ],
@@ -118,21 +252,21 @@
           "stepId": "site_explore",
           "action": "reviewed",
           "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:22.816Z"
+          "timestamp": "2026-03-10T09:24:47.611Z"
         },
         {
           "stepId": "site_explore",
           "action": "approved",
           "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:22.826Z"
+          "timestamp": "2026-03-10T09:24:49.597Z"
         }
       ],
-      "updatedAt": "2026-03-10T06:09:22.826Z"
+      "updatedAt": "2026-03-10T09:24:49.597Z"
     },
     "plan_generate": {
       "id": "plan_generate",
       "title": "测试计划生成",
-      "status": "approved",
+      "status": "ai_generated",
       "artifacts": [
         {
           "label": "模块测试计划",
@@ -145,58 +279,16 @@
           "kind": "json"
         }
       ],
-      "approvals": [
-        {
-          "stepId": "plan_generate",
-          "action": "reviewed",
-          "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:22.854Z"
-        },
-        {
-          "stepId": "plan_generate",
-          "action": "approved",
-          "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:22.863Z"
-        }
-      ],
-      "updatedAt": "2026-03-10T06:09:22.863Z"
+      "approvals": [],
+      "updatedAt": "2026-03-10T10:01:29.578Z"
     },
     "cases_generate": {
       "id": "cases_generate",
       "title": "测试用例生成",
-      "status": "approved",
-      "artifacts": [
-        {
-          "label": "结构化测试用例 JSON",
-          "path": "cases/structured-test-cases.json",
-          "kind": "json"
-        },
-        {
-          "label": "结构化测试用例 Markdown",
-          "path": "cases/structured-test-cases.md",
-          "kind": "markdown"
-        },
-        {
-          "label": "测试用例元数据",
-          "path": "cases/structured-test-cases.meta.json",
-          "kind": "json"
-        }
-      ],
-      "approvals": [
-        {
-          "stepId": "cases_generate",
-          "action": "reviewed",
-          "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:22.891Z"
-        },
-        {
-          "stepId": "cases_generate",
-          "action": "approved",
-          "actor": "local-user",
-          "timestamp": "2026-03-10T06:09:22.900Z"
-        }
-      ],
-      "updatedAt": "2026-03-10T06:09:22.900Z"
+      "status": "draft",
+      "artifacts": [],
+      "approvals": [],
+      "updatedAt": "2026-03-10T08:06:26.470Z"
     },
     "tests_generate": {
       "id": "tests_generate",
@@ -204,7 +296,7 @@
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-10T06:09:17.139Z"
+      "updatedAt": "2026-03-10T08:06:26.470Z"
     },
     "tests_run": {
       "id": "tests_run",
@@ -212,7 +304,7 @@
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-10T06:09:17.139Z"
+      "updatedAt": "2026-03-10T08:06:26.470Z"
     }
   },
   "logs": [
@@ -327,7 +419,479 @@
       "action": "批准",
       "actor": "local-user",
       "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773123485236-38c261",
+      "timestamp": "2026-03-10T06:18:05.236Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://www.saucedemo.com/。"
+    },
+    {
+      "id": "1773123493465-f40492",
+      "timestamp": "2026-03-10T06:18:13.465Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773123495011-076973",
+      "timestamp": "2026-03-10T06:18:15.011Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用模板降级模式生成规范化需求。"
+    },
+    {
+      "id": "1773123495465-849e08",
+      "timestamp": "2026-03-10T06:18:15.466Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773123496096-61f2a5",
+      "timestamp": "2026-03-10T06:18:16.096Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773123520890-13e6a5",
+      "timestamp": "2026-03-10T06:18:40.890Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773123527278-c71741",
+      "timestamp": "2026-03-10T06:18:47.278Z",
+      "stepId": "site_explore",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773123527902-75c417",
+      "timestamp": "2026-03-10T06:18:47.902Z",
+      "stepId": "site_explore",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773123559467-1b16fb",
+      "timestamp": "2026-03-10T06:19:19.467Z",
+      "stepId": "plan_generate",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已生成模块级测试计划。"
+    },
+    {
+      "id": "1773123560130-6c60f6",
+      "timestamp": "2026-03-10T06:19:20.130Z",
+      "stepId": "plan_generate",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773123560634-0bd68c",
+      "timestamp": "2026-03-10T06:19:20.634Z",
+      "stepId": "plan_generate",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773123573819-3e1b06",
+      "timestamp": "2026-03-10T06:19:33.819Z",
+      "stepId": "cases_generate",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已生成结构化测试用例。"
+    },
+    {
+      "id": "1773123590038-a97c6d",
+      "timestamp": "2026-03-10T06:19:50.038Z",
+      "stepId": "cases_generate",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773123590663-3588db",
+      "timestamp": "2026-03-10T06:19:50.663Z",
+      "stepId": "cases_generate",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773123962724-3f3067",
+      "timestamp": "2026-03-10T06:26:02.724Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://zodiactest.ny-zodiac.com:8443/index。"
+    },
+    {
+      "id": "1773124002547-e3ed45",
+      "timestamp": "2026-03-10T06:26:42.547Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773124004348-6815b7",
+      "timestamp": "2026-03-10T06:26:44.348Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用模板降级模式生成规范化需求。"
+    },
+    {
+      "id": "1773124087141-6b8b91",
+      "timestamp": "2026-03-10T06:28:07.141Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773124087494-aab957",
+      "timestamp": "2026-03-10T06:28:07.494Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773124811574-fa05d2",
+      "timestamp": "2026-03-10T06:40:11.574Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://zodiactest.ny-zodiac.com:8443/index。"
+    },
+    {
+      "id": "1773124813699-7d8498",
+      "timestamp": "2026-03-10T06:40:13.699Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773124830508-0c97fd",
+      "timestamp": "2026-03-10T06:40:30.508Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773124863173-413ea2",
+      "timestamp": "2026-03-10T06:41:03.173Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773124911836-490c8a",
+      "timestamp": "2026-03-10T06:41:51.836Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773124912383-ea8a29",
+      "timestamp": "2026-03-10T06:41:52.383Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773125086578-97538c",
+      "timestamp": "2026-03-10T06:44:46.578Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773125142860-4c69c8",
+      "timestamp": "2026-03-10T06:45:42.860Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773125212848-aa87dc",
+      "timestamp": "2026-03-10T06:46:52.848Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773125251878-47b9cd",
+      "timestamp": "2026-03-10T06:47:31.878Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773125370230-b3f7ca",
+      "timestamp": "2026-03-10T06:49:30.230Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773126739384-995651",
+      "timestamp": "2026-03-10T07:12:19.384Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://zodiactest.ny-zodiac.com:8443/index。"
+    },
+    {
+      "id": "1773127056551-844a1f",
+      "timestamp": "2026-03-10T07:17:36.551Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773127086267-627da8",
+      "timestamp": "2026-03-10T07:18:06.267Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773127107767-37630b",
+      "timestamp": "2026-03-10T07:18:27.767Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773127200336-3059f8",
+      "timestamp": "2026-03-10T07:20:00.336Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773127225095-a6e68f",
+      "timestamp": "2026-03-10T07:20:25.095Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773127265607-a870dc",
+      "timestamp": "2026-03-10T07:21:05.607Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773127301610-98dc07",
+      "timestamp": "2026-03-10T07:21:41.610Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773129977324-5fb30a",
+      "timestamp": "2026-03-10T08:06:17.325Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://zodiactest.ny-zodiac.com:8443/index。"
+    },
+    {
+      "id": "1773129986468-e97486",
+      "timestamp": "2026-03-10T08:06:26.468Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://zodiactest.ny-zodiac.com:8443/index。"
+    },
+    {
+      "id": "1773129989965-7698dd",
+      "timestamp": "2026-03-10T08:06:29.965Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773130007190-dc01fc",
+      "timestamp": "2026-03-10T08:06:47.190Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773130015648-ad6ab6",
+      "timestamp": "2026-03-10T08:06:55.648Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773130016457-8a9dcb",
+      "timestamp": "2026-03-10T08:06:56.457Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773131101272-f33509",
+      "timestamp": "2026-03-10T08:25:01.272Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773131502805-c639c3",
+      "timestamp": "2026-03-10T08:31:42.805Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773131690876-19207c",
+      "timestamp": "2026-03-10T08:34:50.876Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773131705321-11c27f",
+      "timestamp": "2026-03-10T08:35:05.321Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773132483575-842610",
+      "timestamp": "2026-03-10T08:48:03.575Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773132564119-8f75fc",
+      "timestamp": "2026-03-10T08:49:24.119Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773132589566-95d241",
+      "timestamp": "2026-03-10T08:49:49.566Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773133488777-14f312",
+      "timestamp": "2026-03-10T09:04:48.777Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773133752932-cc1384",
+      "timestamp": "2026-03-10T09:09:12.932Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773134409152-097ef2",
+      "timestamp": "2026-03-10T09:20:09.152Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773134654880-aa37e0",
+      "timestamp": "2026-03-10T09:24:14.880Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773134687611-12e7d1",
+      "timestamp": "2026-03-10T09:24:47.611Z",
+      "stepId": "site_explore",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773134689597-0e85b3",
+      "timestamp": "2026-03-10T09:24:49.597Z",
+      "stepId": "site_explore",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773136844701-0030da",
+      "timestamp": "2026-03-10T10:00:44.701Z",
+      "stepId": "plan_generate",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已生成模块级测试计划。"
+    },
+    {
+      "id": "1773136889578-41433c",
+      "timestamp": "2026-03-10T10:01:29.578Z",
+      "stepId": "plan_generate",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已生成模块级测试计划。"
     }
   ],
-  "updatedAt": "2026-03-10T06:09:22.904Z"
+  "updatedAt": "2026-03-10T10:01:29.578Z"
 }

@@ -17,15 +17,15 @@ export const config = {
   port: Number(process.env.PORT ?? 3001),
   defaultOperator: process.env.DEFAULT_OPERATOR ?? 'local-user',
   siteExplore: {
-    maxPages: Number(process.env.SITE_EXPLORE_MAX_PAGES ?? 4),
+    maxPages: Number(process.env.SITE_EXPLORE_MAX_PAGES ?? 12),
     sauceDemoUsername: process.env.SITE_EXPLORE_SAUCEDEMO_USERNAME ?? 'standard_user',
     sauceDemoPassword: process.env.SITE_EXPLORE_SAUCEDEMO_PASSWORD ?? 'secret_sauce',
   },
   ai: {
     mode: aiMode,
-    provider: process.env.AI_PROVIDER ?? 'openai-compatible',
-    baseURL: process.env.AI_BASE_URL ?? 'https://api.openai.com/v1',
-    model: process.env.AI_MODEL ?? 'gpt-4.1-mini',
+    provider: process.env.AI_PROVIDER ?? 'moonshot',
+    baseURL: process.env.AI_BASE_URL ?? 'https://api.moonshot.cn/v1',
+    model: process.env.AI_MODEL ?? 'moonshot-v1-8k',
     apiKey: process.env.AI_API_KEY ?? '',
   },
 };

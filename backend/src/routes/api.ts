@@ -6,6 +6,12 @@ import { config } from '../config.js';
 import { ApiError } from '../utils/apiError.js';
 import { approveStep, getWorkflowPayload, initializeProject } from '../services/workflowService.js';
 import {
+  clearLoginSession,
+  getLoginSessionStatus,
+  saveInteractiveLoginSession,
+  startInteractiveLoginSession,
+} from '../services/loginSessionService.js';
+import {
   generateNormalizedRequirements,
   saveRequirementsReview,
   uploadRequirements,
@@ -19,9 +25,31 @@ import { stepIds } from '../types/workflow.js';
 const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
 
+const optionalUrlSchema = z.preprocess(
+  (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+  z.string().trim().url('请输入合法的网站 URL。').optional(),
+);
+
+const optionalMaxPagesSchema = z.preprocess(
+  (value) => {
+    if (value === '' || value === null || typeof value === 'undefined') {
+      return undefined;
+    }
+
+    if (typeof value === 'string') {
+      return Number(value);
+    }
+
+    return value;
+  },
+  z.number().int('探索页数必须是整数。').min(1, '至少探索 1 页。').max(30, '单次最多探索 30 页。').optional(),
+);
+
 const initProjectSchema = z.object({
   projectName: z.string().trim().min(1, '项目名称不能为空。').default('ai-playwright-poc'),
   siteUrl: z.string().trim().url('请输入合法的网站 URL。'),
+  requiresLogin: z.boolean().optional().default(false),
+  loginUrl: optionalUrlSchema,
   operator: z.string().trim().min(1, '操作人不能为空。').default(config.defaultOperator),
 });
 
@@ -32,6 +60,25 @@ const operatorSchema = z.object({
 
 const reviewSchema = operatorSchema.extend({
   content: z.string().min(1, '审阅内容不能为空。'),
+});
+
+const exploreSiteSchema = operatorSchema.extend({
+  maxPages: optionalMaxPagesSchema,
+  login: z.object({
+    enabled: z.boolean().optional(),
+    loginUrl: optionalUrlSchema,
+    username: z.string().trim().optional(),
+    password: z.string().optional(),
+    useStoredSession: z.boolean().optional(),
+  }).optional(),
+});
+
+const loginSessionStartSchema = operatorSchema.extend({
+  loginUrl: optionalUrlSchema,
+});
+
+const loginSessionSaveSchema = operatorSchema.extend({
+  closeBrowserAfterSave: z.boolean().optional(),
 });
 
 router.post('/project/init', handleAsync(async (req, res) => {
@@ -78,14 +125,47 @@ router.post('/requirements/normalize', handleAsync(async (req, res) => {
 }));
 
 router.post('/site/explore', handleAsync(async (req, res) => {
-  const payload = operatorSchema.parse(req.body ?? {});
-  const result = await exploreSite({ actor: payload.operator });
+  const payload = exploreSiteSchema.parse(req.body ?? {});
+  const result = await exploreSite({
+    actor: payload.operator,
+    maxPages: payload.maxPages,
+    login: payload.login,
+  });
 
   res.json({
     ...buildStepResponse(result.state, 'site_explore'),
     summary: result.summary,
     metadata: result.metadata,
   });
+}));
+
+router.get('/site/login-session/status', handleAsync(async (_req, res) => {
+  const session = await getLoginSessionStatus();
+  res.json({ ok: true, session });
+}));
+
+router.post('/site/login-session/start', handleAsync(async (req, res) => {
+  const payload = loginSessionStartSchema.parse(req.body ?? {});
+  const session = await startInteractiveLoginSession({
+    actor: payload.operator,
+    loginUrl: payload.loginUrl,
+  });
+
+  res.json({ ok: true, session });
+}));
+
+router.post('/site/login-session/save', handleAsync(async (req, res) => {
+  const payload = loginSessionSaveSchema.parse(req.body ?? {});
+  const session = await saveInteractiveLoginSession({
+    closeBrowserAfterSave: payload.closeBrowserAfterSave,
+  });
+
+  res.json({ ok: true, session });
+}));
+
+router.post('/site/login-session/clear', handleAsync(async (_req, res) => {
+  const session = await clearLoginSession();
+  res.json({ ok: true, session });
 }));
 
 router.post('/plan/generate', handleAsync(async (req, res) => {

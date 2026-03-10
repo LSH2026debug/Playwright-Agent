@@ -60,6 +60,8 @@ export async function ensureWorkflowScaffold(): Promise<void> {
 export async function initializeProject(input: {
   projectName: string;
   siteUrl: string;
+  requiresLogin?: boolean;
+  loginUrl?: string;
   operator?: string;
 }): Promise<WorkflowState> {
   const state = await loadState();
@@ -70,6 +72,10 @@ export async function initializeProject(input: {
     name: input.projectName,
     siteUrl: input.siteUrl,
     operator,
+    auth: {
+      requiresLogin: input.requiresLogin ?? false,
+      loginUrl: input.requiresLogin ? (input.loginUrl ?? input.siteUrl) : null,
+    },
     createdAt: state.project?.createdAt ?? timestamp,
     updatedAt: timestamp,
   };
@@ -207,11 +213,34 @@ export async function approveStep(input: {
 export async function getWorkflowPayload(): Promise<WorkflowStatePayload> {
   const state = await loadState();
   const documents: WorkflowDocuments = {
-    rawRequirements: await readText(paths.requirementsInputFile),
-    normalizedRequirements: await readText(paths.normalizedRequirementsFile),
-    siteExploreSummary: await readText(paths.siteExploreSummaryFile),
-    planDocument: await readText(paths.plansFile),
-    casesDocument: await readText(paths.casesMarkdownFile),
+    rawRequirements: state.steps.requirements_upload.status === 'draft'
+      ? null
+      : await readText(paths.requirementsInputFile),
+    normalizedRequirements: state.steps.requirements_normalize.status === 'draft'
+      ? null
+      : await readText(paths.normalizedRequirementsFile),
+    normalizedRequirementsMeta: state.steps.requirements_normalize.status === 'draft'
+      ? null
+      : await readJson(paths.normalizedRequirementsMetaFile, null),
+    loginSessionMeta: await readJson(paths.loginSessionMetaFile, null),
+    siteExploreSummary: state.steps.site_explore.status === 'draft'
+      ? null
+      : await readText(paths.siteExploreSummaryFile),
+    siteExploreMeta: state.steps.site_explore.status === 'draft'
+      ? null
+      : await readJson(paths.siteExploreMetaFile, null),
+    planDocument: state.steps.plan_generate.status === 'draft'
+      ? null
+      : await readText(paths.plansFile),
+    planMeta: state.steps.plan_generate.status === 'draft'
+      ? null
+      : await readJson(paths.plansMetaFile, null),
+    casesDocument: state.steps.cases_generate.status === 'draft'
+      ? null
+      : await readText(paths.casesMarkdownFile),
+    casesMeta: state.steps.cases_generate.status === 'draft'
+      ? null
+      : await readJson(paths.casesMetaFile, null),
   };
 
   return {
@@ -260,7 +289,15 @@ async function loadState(): Promise<WorkflowState> {
   }
 
   return {
-    project: stored.project ?? null,
+    project: stored.project
+      ? {
+          ...stored.project,
+          auth: {
+            requiresLogin: stored.project.auth?.requiresLogin ?? false,
+            loginUrl: stored.project.auth?.loginUrl ?? null,
+          },
+        }
+      : null,
     steps: stepIds.reduce((accumulator, stepId) => {
       const base = createEmptyStep(stepId, stored.updatedAt ?? fallback.updatedAt);
       const existing = stored.steps?.[stepId];

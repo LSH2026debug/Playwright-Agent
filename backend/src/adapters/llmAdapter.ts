@@ -257,6 +257,27 @@ export class LlmAdapter {
     });
 
     if (!response.ok) {
+      const errorPayload = await response.json().catch(() => null) as {
+        error?: {
+          message?: string;
+          type?: string;
+        };
+      } | null;
+      const upstreamMessage = errorPayload?.error?.message?.trim();
+      const upstreamType = errorPayload?.error?.type?.trim();
+
+      if (upstreamType === 'engine_overloaded_error') {
+        throw new Error('上游 LLM 服务当前繁忙，请稍后重试。');
+      }
+
+      if (upstreamMessage && upstreamType) {
+        throw new Error(`上游 LLM 请求失败：${upstreamMessage}（${upstreamType}，状态码 ${response.status}）。`);
+      }
+
+      if (upstreamMessage) {
+        throw new Error(`上游 LLM 请求失败：${upstreamMessage}（状态码 ${response.status}）。`);
+      }
+
       throw new Error(`上游 LLM 请求失败，状态码为 ${response.status}。`);
     }
 
@@ -366,29 +387,34 @@ function buildMockPlan(siteUrl: string): string {
     '- 这是 Mock 模式生成的模块级测试计划。',
     '',
     '## 计划模块',
-    '- auth',
-    '- catalog',
-    '- cart',
-    '- checkout',
+    '- 登录与会话',
+    '- 首页与导航',
+    '- 核心业务入口',
+    '- 关键内容页',
     '',
     '## 测试重点',
     '- 登录成功与失败反馈。',
-    '- 商品列表加载、详情一致性与主要操作。',
-    '- 购物车加购、移除与数量状态。',
-    '- 结账流程与完成页。',
+    '- 首页可达性、入口可见性与导航跳转。',
+    '- 关键业务模块的主流程与异常分支。',
+    '- 关键页面的内容加载、交互反馈与权限边界。',
   ].join('\n');
 }
 
 function buildTemplatePlan(siteUrl: string, normalizedRequirements: string, siteExploreSummary: string): string {
-  const moduleMatches = [...normalizedRequirements.matchAll(/^[-*]\s+(auth|catalog|cart|checkout|core)(?:$|\s|：|:)/gm)].map((match) => match[1]);
-  const modules = moduleMatches.length > 0 ? [...new Set(moduleMatches)] : ['auth', 'catalog', 'cart', 'checkout'];
+  const modules = inferPlanModules(normalizedRequirements, siteExploreSummary, siteUrl);
   const exploreHighlights = summarizeExploreSummary(siteExploreSummary);
 
   return [
     '# 模块级测试计划',
     '',
     `- 目标站点：${siteUrl}`,
-    '- 当前结果由模板生成，用于第二阶段人工审阅。',
+    `- 当前结果由模板生成，用于第二阶段人工审阅。`,
+    `- 模型配置来源：${config.ai.provider} / ${config.ai.model}`,
+    '',
+    '## 计划来源',
+    '- 输入一：已批准的规范化需求。',
+    '- 输入二：已批准的站点探索摘要。',
+    '- 生成策略：当实时 LLM 不可用或请求失败时，使用模板逻辑根据上述两份输入推断模块和测试重点。',
     '',
     '## 模块范围',
     ...modules.map((moduleName) => `- ${moduleName}`),
@@ -396,19 +422,84 @@ function buildTemplatePlan(siteUrl: string, normalizedRequirements: string, site
     '## 每模块测试目标',
     ...modules.flatMap((moduleName) => [
       `### 模块：${moduleName}`,
-      '- 覆盖模块主流程。',
-      '- 覆盖一个关键负向场景。',
-      '- 覆盖页面可达性和关键交互。',
+      `- 覆盖 ${moduleName} 的主流程。`,
+      `- 覆盖 ${moduleName} 的关键负向场景或异常分支。`,
+      `- 覆盖 ${moduleName} 的页面可达性、关键交互与状态反馈。`,
       '',
     ]),
+    '## 关键前置条件',
+    '- 已有可用测试环境与基础访问权限。',
+    '- 站点探索摘要中的关键页面仍然可访问。',
+    '- 若目标站点要求登录，需准备可复用登录态或有效账号。',
+    '',
     '## 探索摘要参考',
     ...exploreHighlights,
     '',
+    '## 风险与限制',
+    '- 当前模板计划依赖已批准文档中的模块名称与页面信息，若上游文档过于粗糙，计划粒度也会受限。',
+    '- 模板模式不会像实时 LLM 那样做更深的语义归纳，因此更适合作为人工审阅初稿。',
+    '- 若站点是强业务定制系统，后续仍建议结合人工补充模块边界与优先级。',
+    '',
     '## 审阅检查清单',
     '- 确认模块边界与规范化需求一致。',
-    '- 确认模块覆盖登录、浏览、购物车、结账等关键路径。',
+    '- 确认模块命名与站点真实菜单、页面或业务域一致。',
     '- 确认计划可以继续拆分为结构化测试用例。',
   ].join('\n');
+}
+
+function inferPlanModules(normalizedRequirements: string, siteExploreSummary: string, siteUrl: string): string[] {
+  const requirementModules = extractBulletModules(normalizedRequirements);
+  const exploredModules = extractExploreModules(siteExploreSummary);
+  const merged = [...requirementModules, ...exploredModules]
+    .map((item) => normalizeModuleName(item))
+    .filter(Boolean);
+
+  const uniqueModules = merged.filter((item, index, array) => array.indexOf(item) === index);
+  if (uniqueModules.length > 0) {
+    return uniqueModules.slice(0, 8);
+  }
+
+  return inferModules(normalizedRequirements, siteUrl).map(normalizeModuleName).filter(Boolean);
+}
+
+function extractBulletModules(markdown: string): string[] {
+  const lines = markdown
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => /^[-*]\s+/.test(line));
+
+  return lines
+    .map((line) => line.replace(/^[-*]\s+/, '').trim())
+    .map((line) => line.split(/[：:]/)[0].trim())
+    .filter((line) => line.length >= 2)
+    .filter((line) => !/^目标站点|工作流目标|交付约束|本 POC|所有输出|当前模块推断|细粒度页面元数据|风险与假设|审批检查清单$/i.test(line));
+}
+
+function extractExploreModules(siteExploreSummary: string): string[] {
+  const pageHeaders = [...siteExploreSummary.matchAll(/^###\s+(.+)$/gm)]
+    .map((match) => match[1].trim())
+    .filter((value) => value && value.toLowerCase() !== '页面概览' && value.toLowerCase() !== '推荐业务流程');
+
+  const headingLines = [...siteExploreSummary.matchAll(/^- 标题层级：(.+)$/gm)]
+    .flatMap((match) => match[1].split('；'))
+    .map((value) => value.replace(/\/+$/g, '').trim())
+    .filter((value) => value.length >= 2);
+
+  return [...pageHeaders, ...headingLines]
+    .filter((value) => !/^https?:/i.test(value))
+    .filter((value) => !/^home$/i.test(value))
+    .filter((value) => !/^首页$/i.test(value));
+}
+
+function normalizeModuleName(value: string): string {
+  return value
+    .replace(/^模块[:：]?\s*/i, '')
+    .replace(/^页面[:：]?\s*/i, '')
+    .replace(/^检查页面\s*/i, '')
+    .replace(/^当前位于/, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\/+$/g, '')
+    .trim();
 }
 
 function summarizeExploreSummary(siteExploreSummary: string): string[] {
@@ -455,7 +546,7 @@ function inferModules(sourceText: string, siteUrl: string): string[] {
   }
 
   if (detected.size === 0) {
-    detected.add(siteUrl.includes('saucedemo') ? 'auth' : 'core');
+    detected.add(siteUrl.includes('saucedemo') ? 'auth' : '核心流程');
   }
 
   return [...detected];

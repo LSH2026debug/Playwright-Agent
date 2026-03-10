@@ -30,7 +30,11 @@
 - 第 1 步项目初始化
 - 第 2 步需求上传或粘贴
 - 第 3 步 AI 规范化需求、人工编辑、人工批准
+- 第 3 步展示生成方式、提供方、模型与回退提示
 - 第 4 步 Playwright 受控站点探索、人工编辑、人工批准
+- 第 4 步支持前端自定义本次最多探索页数
+- 第 4 步支持普通用户名密码登录配置后再探索
+- 第 4 步支持“打开真实浏览器手动登录 -> 保存登录态 -> 复用登录态探索”
 - 第 5 步模块级测试计划生成、人工编辑、人工批准
 - 第 6 步结构化测试用例生成、人工编辑、人工批准
 - 下一步按钮严格受状态控制
@@ -74,14 +78,17 @@ Copy-Item .env.example .env
 
 ```env
 AI_MODE=auto
-AI_PROVIDER=openai-compatible
-AI_BASE_URL=https://api.openai.com/v1
-AI_MODEL=gpt-4.1-mini
+AI_PROVIDER=moonshot
+AI_BASE_URL=https://api.moonshot.cn/v1
+AI_MODEL=moonshot-v1-8k
 AI_API_KEY=
 PORT=3001
 DEFAULT_OPERATOR=local-user
+SITE_EXPLORE_MAX_PAGES=12
 VITE_API_BASE_URL=http://localhost:3001
 ```
+
+上面这一组默认示例已切到 Kimi 的 Moonshot OpenAI 兼容接口，你只需要填写 `AI_API_KEY`。
 
 模式说明：
 
@@ -118,14 +125,16 @@ http://localhost:3001
 ## 当前端到端演示步骤
 
 1. 在前端第 1 步填写项目名称和网站 URL。
-2. 第 2 步上传 `inputs/sample-saucedemo-requirements.md`，或直接粘贴需求内容。
-3. 第 3 步点击“AI 生成”。
-4. 在文本框中编辑结果后点击“保存审阅”。
-5. 点击“批准当前步骤”。
-6. 第 4 步点击“执行站点探索”，审阅并批准探索摘要。
-7. 第 5 步点击“生成测试计划”，审阅并批准计划文档。
-8. 第 6 步点击“生成测试用例”，审阅并批准结构化测试用例。
-9. 每一步批准后“下一步”按钮才会解锁。
+2. 如果目标站点需要登录，可在第 1 步勾选“需要登录后探索”并填写登录页 URL。
+3. 第 2 步上传 `inputs/sample-saucedemo-requirements.md`，或直接粘贴需求内容。
+4. 第 3 步点击“AI 生成”，并在结果上方确认当前使用的生成方式和模型。
+5. 如果站点登录流程复杂，优先在第 4 步点击“打开登录浏览器”，手动完成登录后点击“保存当前登录态”。
+6. 如果站点只是普通用户名密码表单，也可以直接在第 4 步填写用户名和密码。
+7. 第 4 步点击“执行站点探索”，审阅并批准探索摘要。
+  你也可以在执行前直接调整“本次最多探索页数”，决定这次要尝试探索多少页。
+8. 第 5 步点击“生成测试计划”，审阅并批准计划文档。
+9. 第 6 步点击“生成测试用例”，审阅并批准结构化测试用例。
+10. 每一步批准后“下一步”按钮才会解锁。
 
 ## 关键工件
 
@@ -142,6 +151,8 @@ http://localhost:3001
 - `metadata/site/explore-summary.md`
 - `metadata/site/explore-meta.json`
 - `metadata/screenshots/*.png`
+- `artifacts/auth/login-session.json`
+- `artifacts/auth/storage-state.json`
 - `plans/module-test-plan.md`
 - `plans/module-test-plan.meta.json`
 - `cases/structured-test-cases.json`
