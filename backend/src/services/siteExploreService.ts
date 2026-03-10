@@ -12,6 +12,59 @@ import { loadWorkflowAndTransition } from './workflowTransitions.js';
 import { getLoginSessionStatus } from './loginSessionService.js';
 import type { ArtifactRef, ProjectAuthConfig, WorkflowState } from '../types/workflow.js';
 
+interface InteractiveElement {
+  tag: string;
+  text: string;
+  selector: string;
+  playwrightLocator: string;
+  role?: string;
+  ariaLabel?: string;
+  type?: string;
+  isUnique: boolean;
+}
+
+interface FormField {
+  tag: string;
+  type: string;
+  selector: string;
+  playwrightLocator: string;
+  label?: string;
+  placeholder?: string;
+  name?: string;
+  required: boolean;
+  options?: string[];
+  isUnique: boolean;
+}
+
+interface TableInfo {
+  selector: string;
+  columns: string[];
+  rowCount: number;
+  rowActionButtons: string[];
+  hasPagination: boolean;
+}
+
+interface AccessibilityNode {
+  role: string;
+  name: string;
+  children?: AccessibilityNode[];
+}
+
+interface ApiRequest {
+  method: string;
+  url: string;
+  statusCode?: number;
+}
+
+interface DialogInfo {
+  triggerSelector: string;
+  triggerText: string;
+  dialogSelector: string;
+  title?: string;
+  formFields: FormField[];
+  buttons: InteractiveElement[];
+}
+
 interface PageMetadata {
   id: string;
   title: string;
@@ -19,6 +72,12 @@ interface PageMetadata {
   headings: string[];
   roleHints: string[];
   screenshot: string;
+  interactiveElements: InteractiveElement[];
+  formFields: FormField[];
+  dialogs: DialogInfo[];
+  tables: TableInfo[];
+  accessibilityTree: AccessibilityNode[];
+  apiRequests: ApiRequest[];
 }
 
 interface FlowMetadata {
@@ -99,6 +158,7 @@ export async function exploreSite(input: {
     const pages: PageMetadata[] = [];
     const screenshotPaths: string[] = [];
     const visitedUrls = new Set<string>();
+    const apiRequests = setupApiRequestMonitor(page);
 
     let authenticated = false;
     if (loginConfig.useStoredSession) {
@@ -148,6 +208,21 @@ export async function exploreSite(input: {
     }
 
     const flows = buildFlows(siteUrl, pages, authenticated);
+
+    // Distribute collected API requests to pages (associate by timing — assign all to a global list)
+    // Deduplicate API requests and assign to each page based on URL match
+    const uniqueApis = deduplicateApiRequests(apiRequests);
+    if (pages.length > 0) {
+      // Assign all unique API requests to page-elements.json at global level
+      // and also attempt to match by page URL origin
+      for (const p of pages) {
+        p.apiRequests = uniqueApis.filter(r => {
+          // Simple heuristic: if the API path contains a keyword from the page id, associate it
+          return true; // Assign all APIs to every page for now; the consumer can filter
+        });
+      }
+    }
+
     const summary = buildExploreSummary(siteUrl, pages, flows, {
       maxPages,
       authMethod,
@@ -156,9 +231,10 @@ export async function exploreSite(input: {
       loginUrl: loginConfig.enabled ? loginConfig.loginUrl : null,
     });
 
-    await writeText(paths.sitePagesFile, yaml.dump({ pages }, { lineWidth: 120 }));
+    await writeText(paths.sitePagesFile, yaml.dump({ pages: pages.map(stripPageElementsForYaml) }, { lineWidth: 120 }));
     await writeText(paths.siteFlowsFile, yaml.dump({ flows }, { lineWidth: 120 }));
     await writeText(paths.siteExploreSummaryFile, summary);
+    await writeJson(paths.sitePageElementsFile, buildPageElementsPayload(pages));
     await writeJson(paths.siteExploreMetaFile, {
       exploredAt: new Date().toISOString(),
       siteUrl,
@@ -421,6 +497,11 @@ function buildExploreSummary(
     `- 是否使用登录：${authSummary.loginUsed ? '是' : '否'}`,
     `- 登录结果：${authSummary.loginUsed ? (authSummary.authenticated ? '登录成功' : '登录未成功') : '未启用登录'}`,
     ...(authSummary.loginUrl ? [`- 登录页：${authSummary.loginUrl}`] : []),
+    `- 总交互元素数：${pages.reduce((s, p) => s + p.interactiveElements.length, 0)}`,
+    `- 总表单字段数：${pages.reduce((s, p) => s + p.formFields.length, 0)}`,
+    `- 已探测弹窗数：${pages.reduce((s, p) => s + p.dialogs.length, 0)}`,
+    `- 已识别表格数：${pages.reduce((s, p) => s + p.tables.length, 0)}`,
+    `- 已捕获API数：${pages.reduce((s, p) => s + p.apiRequests.length, 0)}`,
     '',
     '## 页面概览',
     ...pages.flatMap((item) => [
@@ -430,6 +511,10 @@ function buildExploreSummary(
       `- 截图：${item.screenshot}`,
       `- 标题层级：${item.headings.join('；') || '无'}`,
       `- 可见操作提示：${item.roleHints.join('；') || '无'}`,
+      `- 交互元素：${item.interactiveElements.length} 个${item.interactiveElements.length > 0 ? '（' + item.interactiveElements.slice(0, 5).map(e => `[${e.text}]`).join('、') + (item.interactiveElements.length > 5 ? '…' : '') + '）' : ''}`,
+      `- 表单字段：${item.formFields.length} 个${item.formFields.length > 0 ? '（' + item.formFields.slice(0, 5).map(f => `${f.label || f.placeholder || f.name || f.type}`).join('、') + (item.formFields.length > 5 ? '…' : '') + '）' : ''}`,
+      ...(item.dialogs.length > 0 ? [`- 弹窗：${item.dialogs.map(d => `"${d.triggerText}" → ${d.title || '无标题'}（${d.formFields.length} 字段）`).join('；')}`] : []),
+      ...(item.tables.length > 0 ? [`- 表格：${item.tables.map(t => `${t.columns.length} 列 × ${t.rowCount} 行${t.rowActionButtons.length > 0 ? '，操作列: ' + t.rowActionButtons.join('/') : ''}${t.hasPagination ? '，有分页' : ''}`).join('；')}`] : []),
       '',
     ]),
     '## 推荐业务流程',
@@ -442,6 +527,10 @@ function buildExploreSummary(
     '- 确认页面列表覆盖后续要生成测试计划的关键入口。',
     '- 确认截图与页面路径匹配。',
     '- 确认推荐业务流程能够支撑后续模块级测试计划。',
+    '- 确认交互元素和表单字段的选择器能用于后续脚本生成。',
+    '- 确认弹窗探测覆盖了关键的创建/编辑操作。',
+    '',
+    '> 详细交互元素信息见 `metadata/site/page-elements.json`。',
   ].join('\n');
 }
 
@@ -511,17 +600,29 @@ async function captureCurrentPage(
   await page.screenshot({ path: absoluteScreenshotPath, fullPage: true });
 
   const title = await page.title();
-  const headings = await collectVisibleTexts(page, 'h1, h2, h3, .el-breadcrumb__item, .tags-view-item.active, .app-main .el-card__header, .page-title', 8);
-  const buttons = await collectVisibleTexts(page, 'button, .el-button, [role="button"]', 10);
-  const links = await collectVisibleTexts(page, 'a, .el-menu-item, .el-submenu__title, .submenu-title-noDropdown', 12);
+  const headings = await collectVisibleTexts(page, 'h1, h2, h3, .el-breadcrumb__item, .tags-view-item.active, .app-main .el-card__header, .page-title', 12);
+  const buttons = await collectVisibleTexts(page, 'button, .el-button, [role="button"]', 20);
+  const links = await collectVisibleTexts(page, 'a, .el-menu-item, .el-submenu__title, .submenu-title-noDropdown', 20);
+
+  const interactiveElements = await collectInteractiveElements(page, 60);
+  const formFields = await collectFormFields(page);
+  const tables = await collectTableStructures(page);
+  const accessibilityTree = await collectAccessibilityTree(page);
+  const dialogs = await probeDialogs(page, pageId);
 
   pages.push({
     id: pageId,
     title,
     url: currentUrl,
-    headings: normalizeTextList(headings).slice(0, 8),
-    roleHints: normalizeTextList([...buttons, ...links]).slice(0, 10),
+    headings: normalizeTextList(headings).slice(0, 12),
+    roleHints: normalizeTextList([...buttons, ...links]).slice(0, 20),
     screenshot: screenshotPath,
+    interactiveElements,
+    formFields,
+    dialogs,
+    tables,
+    accessibilityTree,
+    apiRequests: [],
   });
   screenshotPaths.push(screenshotPath);
   visitedUrls.add(currentUrl);
@@ -833,6 +934,430 @@ async function collectVisibleTexts(page: Page, selector: string, limit: number):
   return texts.filter(Boolean);
 }
 
+function buildBestSelector(el: Element): string {
+  if (el.id) return `#${el.id}`;
+  const testId = el.getAttribute('data-testid') || el.getAttribute('data-test') || el.getAttribute('data-cy');
+  if (testId) return `[data-testid="${testId}"]`;
+  const ariaLabel = el.getAttribute('aria-label');
+  if (ariaLabel) return `[aria-label="${ariaLabel}"]`;
+  const role = el.getAttribute('role');
+  const tag = el.tagName.toLowerCase();
+  const type = el.getAttribute('type');
+  const name = el.getAttribute('name');
+  const placeholder = el.getAttribute('placeholder');
+  if (name) return `${tag}[name="${name}"]`;
+  if (placeholder) return `${tag}[placeholder="${placeholder}"]`;
+  if (type && tag === 'input') return `input[type="${type}"]`;
+  const classList = Array.from(el.classList).filter(c => !c.startsWith('el-') || /el-(button|input|select|menu-item|dialog|form-item)/.test(c)).slice(0, 2);
+  if (classList.length > 0) {
+    const classSelector = `${tag}.${classList.join('.')}`;
+    if (role) return `${classSelector}[role="${role}"]`;
+    return classSelector;
+  }
+  if (role) return `${tag}[role="${role}"]`;
+  return tag;
+}
+
+function buildPlaywrightLocator(el: Element): string {
+  const text = (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  const ariaLabel = el.getAttribute('aria-label');
+  const role = el.getAttribute('role');
+  const tag = el.tagName.toLowerCase();
+  const placeholder = el.getAttribute('placeholder');
+  const testId = el.getAttribute('data-testid') || el.getAttribute('data-test');
+  if (testId) return `page.getByTestId('${testId}')`;
+  if (role && text) return `page.getByRole('${role}', { name: '${text.slice(0, 40)}' })`;
+  if (tag === 'button' && text) return `page.getByRole('button', { name: '${text.slice(0, 40)}' })`;
+  if (tag === 'a' && text) return `page.getByRole('link', { name: '${text.slice(0, 40)}' })`;
+  if (ariaLabel) return `page.getByLabel('${ariaLabel}')`;
+  if (placeholder) return `page.getByPlaceholder('${placeholder}')`;
+  if (text && (tag === 'span' || tag === 'div' || tag === 'li')) return `page.getByText('${text.slice(0, 40)}')`;
+  return `page.locator('${buildBestSelector(el)}')`;
+}
+
+async function collectInteractiveElements(page: Page, limit: number): Promise<InteractiveElement[]> {
+  const selector = [
+    'button:not([disabled])',
+    '.el-button:not(.is-disabled)',
+    '[role="button"]:not([disabled])',
+    'a[href]',
+    '.el-menu-item',
+    '.el-dropdown-menu__item',
+    '.el-tabs__item',
+    '[role="tab"]',
+    '[role="menuitem"]',
+    '[role="link"]',
+    '[role="switch"]',
+    '.el-switch',
+    '.el-radio',
+    '.el-checkbox',
+  ].join(', ');
+
+  const raw = await page.locator(selector).evaluateAll((elements, params) => {
+    const { maxSize, buildSelectorFn, buildLocatorFn } = params as { maxSize: number; buildSelectorFn: string; buildLocatorFn: string };
+    const buildSel = new Function('el', buildSelectorFn) as (el: Element) => string;
+    const buildLoc = new Function('el', buildLocatorFn) as (el: Element) => string;
+    const seen = new Set<string>();
+    return elements
+      .map((el) => {
+        const rect = el.getBoundingClientRect();
+        if (!rect.width && !rect.height) return null;
+        const text = (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+        if (!text || seen.has(text)) return null;
+        seen.add(text);
+        const tag = el.tagName.toLowerCase();
+        const role = el.getAttribute('role') || undefined;
+        const ariaLabel = el.getAttribute('aria-label') || undefined;
+        const type = el.getAttribute('type') || undefined;
+        const sel = buildSel(el);
+        const matchCount = document.querySelectorAll(sel).length;
+        return {
+          tag,
+          text,
+          selector: sel,
+          playwrightLocator: buildLoc(el),
+          role,
+          ariaLabel,
+          type,
+          isUnique: matchCount === 1,
+        };
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .slice(0, Number(maxSize));
+  }, {
+    maxSize: limit,
+    buildSelectorFn: `return (${buildBestSelector.toString()})(el)`,
+    buildLocatorFn: `return (${buildPlaywrightLocator.toString()})(el)`,
+  });
+
+  return raw;
+}
+
+async function collectFormFields(page: Page, containerSelector?: string): Promise<FormField[]> {
+  const scope = containerSelector || 'body';
+  const raw = await page.locator(`${scope}`).evaluateAll((containers, params) => {
+    const { buildSelectorFn, buildLocatorFn } = params as { buildSelectorFn: string; buildLocatorFn: string };
+    const buildSel = new Function('el', buildSelectorFn) as (el: Element) => string;
+    const buildLoc = new Function('el', buildLocatorFn) as (el: Element) => string;
+    const container = containers[0] || document.body;
+    const fields = container.querySelectorAll('input, select, textarea, .el-input__inner, .el-textarea__inner, .el-select');
+    const seen = new Set<string>();
+    return Array.from(fields)
+      .map((el) => {
+        const rect = el.getBoundingClientRect();
+        if (!rect.width && !rect.height) return null;
+        const tag = el.tagName.toLowerCase();
+        const type = el.getAttribute('type') || (tag === 'select' ? 'select' : tag === 'textarea' ? 'textarea' : 'text');
+        if (type === 'hidden') return null;
+        const sel = buildSel(el);
+        if (seen.has(sel)) return null;
+        seen.add(sel);
+        const matchCount = document.querySelectorAll(sel).length;
+        const name = el.getAttribute('name') || undefined;
+        const placeholder = el.getAttribute('placeholder') || undefined;
+        const required = el.hasAttribute('required') || el.classList.contains('is-required')
+          || Boolean(el.closest('.el-form-item.is-required'));
+        let label: string | undefined;
+        const formItem = el.closest('.el-form-item');
+        if (formItem) {
+          const labelEl = formItem.querySelector('.el-form-item__label');
+          if (labelEl) label = (labelEl.textContent || '').replace(/\s+/g, ' ').trim();
+        }
+        if (!label) {
+          const id = el.getAttribute('id');
+          if (id) {
+            const labelFor = container.querySelector(`label[for="${id}"]`);
+            if (labelFor) label = (labelFor.textContent || '').replace(/\s+/g, ' ').trim();
+          }
+        }
+        if (!label && el.getAttribute('aria-label')) {
+          label = el.getAttribute('aria-label') || undefined;
+        }
+        let options: string[] | undefined;
+        if (tag === 'select') {
+          options = Array.from(el.querySelectorAll('option'))
+            .map(o => (o.textContent || '').trim())
+            .filter(Boolean)
+            .slice(0, 20);
+        }
+        return {
+          tag,
+          type,
+          selector: sel,
+          playwrightLocator: buildLoc(el),
+          label,
+          placeholder,
+          name,
+          required,
+          options,
+          isUnique: matchCount === 1,
+        };
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .slice(0, 50);
+  }, {
+    buildSelectorFn: `return (${buildBestSelector.toString()})(el)`,
+    buildLocatorFn: `return (${buildPlaywrightLocator.toString()})(el)`,
+  });
+
+  return raw;
+}
+
+async function probeDialogs(page: Page, pageId: string): Promise<DialogInfo[]> {
+  const dialogs: DialogInfo[] = [];
+
+  const triggerSelectors = [
+    'button.el-button--primary',
+    '.el-button--primary',
+    'button:has-text("新建")',
+    'button:has-text("创建")',
+    'button:has-text("添加")',
+    'button:has-text("新增")',
+    'button:has-text("编辑")',
+  ];
+
+  for (const triggerSel of triggerSelectors) {
+    if (dialogs.length >= 3) break;
+
+    const triggers = page.locator(triggerSel);
+    const count = await triggers.count();
+
+    for (let i = 0; i < Math.min(count, 2); i++) {
+      if (dialogs.length >= 3) break;
+      const trigger = triggers.nth(i);
+      if (!(await trigger.isVisible().catch(() => false))) continue;
+
+      const triggerText = (await trigger.textContent().catch(() => ''))?.replace(/\s+/g, ' ').trim() || '';
+      if (!triggerText || triggerText.length > 40) continue;
+      if (/登出|logout|signout|删除|delete|remove/i.test(triggerText)) continue;
+
+      const triggerSelector = await trigger.evaluate((el) => {
+        if (el.id) return `#${el.id}`;
+        const testId = el.getAttribute('data-testid');
+        if (testId) return `[data-testid="${testId}"]`;
+        return '';
+      });
+
+      try {
+        await trigger.click();
+        await page.waitForTimeout(800);
+
+        const dialogLocator = page.locator('.el-dialog__wrapper:visible, .el-dialog:visible, .el-drawer:visible, [role="dialog"]:visible, .modal:visible').first();
+        const dialogVisible = (await dialogLocator.count()) > 0;
+
+        if (dialogVisible) {
+          const title = await dialogLocator.locator('.el-dialog__title, .el-drawer__title, .modal-title, [class*="title"]').first().textContent().catch(() => '') || '';
+          const dialogSelector = await dialogLocator.evaluate((el) => {
+            if (el.classList.contains('el-dialog__wrapper')) return '.el-dialog__wrapper:visible';
+            if (el.classList.contains('el-dialog')) return '.el-dialog:visible';
+            if (el.classList.contains('el-drawer')) return '.el-drawer:visible';
+            if (el.getAttribute('role') === 'dialog') return '[role="dialog"]:visible';
+            return '.modal:visible';
+          });
+
+          const formFields = await collectFormFields(page, dialogSelector.replace(':visible', ''));
+          const buttons = await collectInteractiveElements(page, 10);
+          const dialogButtons = buttons.filter(b =>
+            b.tag === 'button' || b.role === 'button'
+          ).slice(0, 6);
+
+          dialogs.push({
+            triggerSelector: triggerSelector || triggerSel,
+            triggerText: triggerText.slice(0, 40),
+            dialogSelector,
+            title: title.replace(/\s+/g, ' ').trim().slice(0, 60) || undefined,
+            formFields,
+            buttons: dialogButtons,
+          });
+
+          const closeBtn = page.locator('.el-dialog__headerbtn, .el-drawer__close-btn, [aria-label="Close"], [aria-label="close"]').first();
+          if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+            await page.waitForTimeout(500);
+          } else {
+            await page.keyboard.press('Escape');
+            await page.waitForTimeout(500);
+          }
+        }
+      } catch {
+        try {
+          await page.keyboard.press('Escape');
+          await page.waitForTimeout(300);
+        } catch { /* ignore */ }
+      }
+    }
+  }
+
+  return dialogs;
+}
+
+async function collectTableStructures(page: Page): Promise<TableInfo[]> {
+  return page.evaluate(() => {
+    const tables: Array<{
+      selector: string;
+      columns: string[];
+      rowCount: number;
+      rowActionButtons: string[];
+      hasPagination: boolean;
+    }> = [];
+
+    // Native HTML tables
+    document.querySelectorAll('table').forEach((table, idx) => {
+      const headers = Array.from(table.querySelectorAll('thead th, thead td'))
+        .map(th => (th.textContent || '').replace(/\s+/g, ' ').trim())
+        .filter(Boolean);
+      const rowCount = table.querySelectorAll('tbody tr').length;
+      const actionBtns = Array.from(new Set(
+        Array.from(table.querySelectorAll('tbody td:last-child button, tbody td:last-child a, tbody td:last-child .el-button'))
+          .map(el => (el.textContent || '').replace(/\s+/g, ' ').trim())
+          .filter(Boolean)
+      )).slice(0, 10);
+      const sel = table.id ? `#${table.id}` : `table:nth-of-type(${idx + 1})`;
+      tables.push({
+        selector: sel,
+        columns: headers.slice(0, 20),
+        rowCount,
+        rowActionButtons: actionBtns,
+        hasPagination: Boolean(document.querySelector('.el-pagination, .pagination, [class*="pager"]')),
+      });
+    });
+
+    // Element UI tables
+    document.querySelectorAll('.el-table').forEach((table, idx) => {
+      const headers = Array.from(table.querySelectorAll('.el-table__header-wrapper th .cell'))
+        .map(th => (th.textContent || '').replace(/\s+/g, ' ').trim())
+        .filter(Boolean);
+      const rowCount = table.querySelectorAll('.el-table__body-wrapper .el-table__row').length;
+      const lastCol = table.querySelectorAll('.el-table__body-wrapper .el-table__row td:last-child');
+      const actionBtns = Array.from(new Set(
+        Array.from(lastCol).flatMap(cell =>
+          Array.from(cell.querySelectorAll('button, a, .el-button'))
+            .map(el => (el.textContent || '').replace(/\s+/g, ' ').trim())
+        ).filter(Boolean)
+      )).slice(0, 10);
+      const sel = table.id ? `#${table.id}` : `.el-table:nth-of-type(${idx + 1})`;
+      tables.push({
+        selector: sel,
+        columns: headers.slice(0, 20),
+        rowCount,
+        rowActionButtons: actionBtns,
+        hasPagination: Boolean(document.querySelector('.el-pagination, .pagination, [class*="pager"]')),
+      });
+    });
+
+    return tables.slice(0, 5);
+  });
+}
+
+async function collectAccessibilityTree(page: Page): Promise<AccessibilityNode[]> {
+  try {
+    return page.evaluate(() => {
+      interface ANode { role: string; name: string; children?: ANode[] }
+      const skipRoles = new Set(['generic', 'none', 'presentation']);
+      const MAX_DEPTH = 4;
+      const MAX_CHILDREN = 20;
+
+      function getRole(el: Element): string {
+        const explicit = el.getAttribute('role');
+        if (explicit) return explicit;
+        const tag = el.tagName.toLowerCase();
+        const roleMap: Record<string, string> = {
+          button: 'button', a: 'link', input: 'textbox', select: 'combobox',
+          textarea: 'textbox', nav: 'navigation', main: 'main', header: 'banner',
+          footer: 'contentinfo', form: 'form', table: 'table', dialog: 'dialog',
+          img: 'img', h1: 'heading', h2: 'heading', h3: 'heading', h4: 'heading',
+          ul: 'list', ol: 'list', li: 'listitem',
+        };
+        if (tag === 'input') {
+          const t = el.getAttribute('type');
+          if (t === 'checkbox') return 'checkbox';
+          if (t === 'radio') return 'radio';
+          if (t === 'submit' || t === 'button') return 'button';
+          return 'textbox';
+        }
+        return roleMap[tag] || 'generic';
+      }
+
+      function getName(el: Element): string {
+        const ariaLabel = el.getAttribute('aria-label');
+        if (ariaLabel) return ariaLabel;
+        const ariaLabelledBy = el.getAttribute('aria-labelledby');
+        if (ariaLabelledBy) {
+          const ref = document.getElementById(ariaLabelledBy);
+          if (ref) return (ref.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+        }
+        const tag = el.tagName.toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+          const placeholder = el.getAttribute('placeholder');
+          if (placeholder) return placeholder;
+          const id = el.getAttribute('id');
+          if (id) {
+            const label = document.querySelector(`label[for="${id}"]`);
+            if (label) return (label.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+          }
+          return '';
+        }
+        if (tag === 'img') return el.getAttribute('alt') || '';
+        const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        return text.slice(0, 60);
+      }
+
+      function walk(el: Element, depth: number): ANode | null {
+        if (depth > MAX_DEPTH) return null;
+        const rect = el.getBoundingClientRect();
+        if (!rect.width && !rect.height) return null;
+
+        const role = getRole(el);
+        const name = getName(el);
+
+        const childEls = Array.from(el.children);
+        const children = childEls
+          .map(c => walk(c, depth + 1))
+          .filter((c): c is ANode => c !== null)
+          .slice(0, MAX_CHILDREN);
+
+        if (skipRoles.has(role) && !name && children.length <= 1) {
+          return children[0] || null;
+        }
+
+        if (skipRoles.has(role) && !name && children.length === 0) return null;
+
+        return { role, name, ...(children.length > 0 ? { children } : {}) };
+      }
+
+      const root = document.querySelector('.app-main') || document.querySelector('main') || document.body;
+      const result = walk(root, 0);
+      return result?.children || (result ? [result] : []);
+    });
+  } catch {
+    return [];
+  }
+}
+
+function setupApiRequestMonitor(page: Page): ApiRequest[] {
+  const requests: ApiRequest[] = [];
+
+  page.on('response', (response) => {
+    const url = response.url();
+    const method = response.request().method();
+    // Only track API-like requests, skip static assets
+    if (/\.(js|css|png|jpg|jpeg|gif|svg|woff2?|ttf|ico|map)(\?|$)/i.test(url)) return;
+    if (method === 'OPTIONS') return;
+    const parsed = (() => { try { return new URL(url); } catch { return null; } })();
+    if (!parsed) return;
+    // Only track same-origin or API-like paths
+    if (/^\/(api|prod-api|dev-api|gpt|dify|v1)\//i.test(parsed.pathname) || /\/(api|graphql|rest)\//i.test(parsed.pathname)) {
+      requests.push({
+        method,
+        url: `${parsed.pathname}${parsed.search}`,
+        statusCode: response.status(),
+      });
+    }
+  });
+
+  return requests;
+}
+
 function stripHash(url: string): string {
   try {
     const parsed = new URL(url);
@@ -841,6 +1366,16 @@ function stripHash(url: string): string {
   } catch {
     return url;
   }
+}
+
+function deduplicateApiRequests(requests: ApiRequest[]): ApiRequest[] {
+  const seen = new Set<string>();
+  return requests.filter(r => {
+    const key = `${r.method} ${r.url}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function formatAuthMethod(method: 'none' | 'credentials' | 'manual_session'): string {
@@ -872,6 +1407,11 @@ function buildSiteExploreArtifacts(screenshotPaths: string[]): ArtifactRef[] {
       kind: 'markdown',
     },
     {
+      label: '页面交互元素',
+      path: toRelativePath(paths.sitePageElementsFile),
+      kind: 'json',
+    },
+    {
       label: '站点探索元数据',
       path: toRelativePath(paths.siteExploreMetaFile),
       kind: 'json',
@@ -882,4 +1422,36 @@ function buildSiteExploreArtifacts(screenshotPaths: string[]): ArtifactRef[] {
       kind: 'image' as const,
     })),
   ];
+}
+
+function stripPageElementsForYaml(page: PageMetadata): Omit<PageMetadata, 'interactiveElements' | 'formFields' | 'dialogs' | 'tables' | 'accessibilityTree' | 'apiRequests'> & { interactiveElementCount: number; formFieldCount: number; dialogCount: number; tableCount: number } {
+  return {
+    id: page.id,
+    title: page.title,
+    url: page.url,
+    headings: page.headings,
+    roleHints: page.roleHints,
+    screenshot: page.screenshot,
+    interactiveElementCount: page.interactiveElements.length,
+    formFieldCount: page.formFields.length,
+    dialogCount: page.dialogs.length,
+    tableCount: page.tables.length,
+  };
+}
+
+function buildPageElementsPayload(pages: PageMetadata[]): object {
+  return {
+    generatedAt: new Date().toISOString(),
+    pages: pages.map((p) => ({
+      id: p.id,
+      url: p.url,
+      title: p.title,
+      interactiveElements: p.interactiveElements,
+      formFields: p.formFields,
+      dialogs: p.dialogs,
+      tables: p.tables,
+      accessibilityTree: p.accessibilityTree,
+      apiRequests: p.apiRequests,
+    })),
+  };
 }

@@ -51,10 +51,25 @@ export async function loadWorkflowAndTransition(input: {
     );
   }
 
-  const current = state.steps[input.stepId] ?? createEmptyStep(input.stepId);
+  let current = state.steps[input.stepId] ?? createEmptyStep(input.stepId);
 
   if (!transitionMap[current.status].includes(input.nextStatus)) {
-    throw new ApiError(409, 'invalid_step_transition', `步骤 ${input.stepId} 不能从 ${current.status} 变更为 ${input.nextStatus}。`);
+    // Allow re-run: if the step has already progressed past the target status,
+    // reset this step and all downstream steps back to draft, then apply the transition.
+    const statusOrder: StepStatus[] = ['draft', 'ai_generated', 'human_reviewed', 'approved', 'completed'];
+    const currentIdx = statusOrder.indexOf(current.status);
+    const targetIdx = statusOrder.indexOf(input.nextStatus);
+
+    if (currentIdx > targetIdx) {
+      // Reset this step and all downstream steps
+      const stepIndex = stepIds.indexOf(input.stepId);
+      for (const downstreamId of stepIds.slice(stepIndex)) {
+        state.steps[downstreamId] = createEmptyStep(downstreamId);
+      }
+      current = state.steps[input.stepId];
+    } else {
+      throw new ApiError(409, 'invalid_step_transition', `步骤 ${input.stepId} 不能从 ${current.status} 变更为 ${input.nextStatus}。`);
+    }
   }
 
   current.status = input.nextStatus;

@@ -24,6 +24,7 @@ export const paths = {
   siteFlowsFile: path.join(rootDir, 'metadata', 'site', 'flows.yaml'),
   siteExploreSummaryFile: path.join(rootDir, 'metadata', 'site', 'explore-summary.md'),
   siteExploreMetaFile: path.join(rootDir, 'metadata', 'site', 'explore-meta.json'),
+  sitePageElementsFile: path.join(rootDir, 'metadata', 'site', 'page-elements.json'),
   plansFile: path.join(rootDir, 'plans', 'module-test-plan.md'),
   plansMetaFile: path.join(rootDir, 'plans', 'module-test-plan.meta.json'),
   casesFile: path.join(rootDir, 'cases', 'structured-test-cases.json'),

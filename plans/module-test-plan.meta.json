@@ -1,7 +1,6 @@
 {
-  "generatedAt": "2026-03-10T10:01:29.574Z",
-  "mode": "template",
+  "generatedAt": "2026-03-10T14:43:01.772Z",
+  "mode": "live",
   "provider": "moonshot",
-  "model": "moonshot-v1-32k",
-  "warning": "实时 LLM 请求失败，已回退到模板生成：上游 LLM 请求失败，状态码为 429。"
+  "model": "moonshot-v1-8k"
 }
