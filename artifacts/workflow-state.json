@@ -3,50 +3,50 @@
     "name": "ai-playwright-poc",
     "siteUrl": "https://www.saucedemo.com/",
     "operator": "local-user",
-    "createdAt": "2026-03-09T09:36:12.793Z",
-    "updatedAt": "2026-03-09T09:36:12.793Z"
+    "createdAt": "2026-03-10T03:10:42.171Z",
+    "updatedAt": "2026-03-10T03:10:42.171Z"
   },
   "steps": {
     "project_init": {
       "id": "project_init",
-      "title": "Project Initialization",
+      "title": "项目初始化",
       "status": "completed",
       "artifacts": [
         {
-          "label": "Project metadata",
+          "label": "项目元数据",
           "path": "artifacts/project.json",
           "kind": "json"
         }
       ],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:12.794Z"
+      "updatedAt": "2026-03-10T03:10:42.171Z"
     },
     "requirements_upload": {
       "id": "requirements_upload",
-      "title": "Requirements Upload",
+      "title": "需求上传",
       "status": "completed",
       "artifacts": [
         {
-          "label": "requirements-input.md",
+          "label": "原始需求文档",
           "path": "inputs/requirements-input.md",
           "kind": "markdown"
         }
       ],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:13.054Z"
+      "updatedAt": "2026-03-10T03:10:42.203Z"
     },
     "requirements_normalize": {
       "id": "requirements_normalize",
-      "title": "Requirements Normalize",
+      "title": "需求规范化",
       "status": "approved",
       "artifacts": [
         {
-          "label": "Normalized requirements",
+          "label": "规范化需求文档",
           "path": "requirements/normalized-requirements.md",
           "kind": "markdown"
         },
         {
-          "label": "Normalized requirements metadata",
+          "label": "规范化需求元数据",
           "path": "requirements/normalized-requirements.meta.json",
           "kind": "json"
         }
@@ -56,99 +56,99 @@
           "stepId": "requirements_normalize",
           "action": "reviewed",
           "actor": "local-user",
-          "timestamp": "2026-03-09T09:36:13.169Z"
+          "timestamp": "2026-03-10T03:10:42.240Z"
         },
         {
           "stepId": "requirements_normalize",
           "action": "approved",
           "actor": "local-user",
-          "timestamp": "2026-03-09T09:36:13.176Z"
+          "timestamp": "2026-03-10T03:10:42.252Z"
         }
       ],
-      "updatedAt": "2026-03-09T09:36:13.176Z"
+      "updatedAt": "2026-03-10T03:10:42.252Z"
     },
     "site_explore": {
       "id": "site_explore",
-      "title": "Site Exploration",
+      "title": "站点探索",
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:12.796Z"
+      "updatedAt": "2026-03-10T03:10:42.172Z"
     },
     "plan_generate": {
       "id": "plan_generate",
-      "title": "Plan Generation",
+      "title": "测试计划生成",
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:12.796Z"
+      "updatedAt": "2026-03-10T03:10:42.172Z"
     },
     "cases_generate": {
       "id": "cases_generate",
-      "title": "Case Generation",
+      "title": "测试用例生成",
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:12.796Z"
+      "updatedAt": "2026-03-10T03:10:42.172Z"
     },
     "tests_generate": {
       "id": "tests_generate",
-      "title": "Test Generation",
+      "title": "测试脚本生成",
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:12.796Z"
+      "updatedAt": "2026-03-10T03:10:42.172Z"
     },
     "tests_run": {
       "id": "tests_run",
-      "title": "Test Execution",
+      "title": "测试执行",
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-09T09:36:12.796Z"
+      "updatedAt": "2026-03-10T03:10:42.172Z"
     }
   },
   "logs": [
     {
-      "id": "1773048972794-c7a232",
-      "timestamp": "2026-03-09T09:36:12.794Z",
+      "id": "1773112242171-0d509c",
+      "timestamp": "2026-03-10T03:10:42.171Z",
       "stepId": "project_init",
-      "action": "init",
+      "action": "初始化",
       "actor": "local-user",
-      "message": "Initialized project for https://www.saucedemo.com/."
+      "message": "已完成项目初始化，目标站点为 https://www.saucedemo.com/。"
     },
     {
-      "id": "1773048973054-796f05",
-      "timestamp": "2026-03-09T09:36:13.054Z",
+      "id": "1773112242203-44ec5c",
+      "timestamp": "2026-03-10T03:10:42.203Z",
       "stepId": "requirements_upload",
-      "action": "upload",
+      "action": "上传",
       "actor": "local-user",
-      "message": "Uploaded source requirements."
+      "message": "已上传原始需求文档。"
     },
     {
-      "id": "1773048973115-6b9353",
-      "timestamp": "2026-03-09T09:36:13.115Z",
+      "id": "1773112242226-73230e",
+      "timestamp": "2026-03-10T03:10:42.226Z",
       "stepId": "requirements_normalize",
-      "action": "generate",
+      "action": "生成",
       "actor": "local-user",
-      "message": "Generated normalized requirements with template mode."
+      "message": "已使用模板降级模式生成规范化需求。"
     },
     {
-      "id": "1773048973169-0d1d90",
-      "timestamp": "2026-03-09T09:36:13.169Z",
+      "id": "1773112242240-33c9f4",
+      "timestamp": "2026-03-10T03:10:42.240Z",
       "stepId": "requirements_normalize",
-      "action": "review",
+      "action": "审阅",
       "actor": "local-user",
-      "message": "Saved human review edits."
+      "message": "已保存人工审阅内容。"
     },
     {
-      "id": "1773048973176-3bd142",
-      "timestamp": "2026-03-09T09:36:13.176Z",
+      "id": "1773112242252-0d3232",
+      "timestamp": "2026-03-10T03:10:42.252Z",
       "stepId": "requirements_normalize",
-      "action": "approve",
+      "action": "批准",
       "actor": "local-user",
-      "message": "Approved step for downstream execution."
+      "message": "当前步骤已批准，可以进入下一环节。"
     }
   ],
-  "updatedAt": "2026-03-09T09:36:13.176Z"
+  "updatedAt": "2026-03-10T03:10:42.255Z"
 }

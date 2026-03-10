@@ -1,3 +1,3 @@
-# Plan To Cases Prompt
+# 测试计划转用例提示词
 
-Phase 2 placeholder. Convert an approved module-level test plan into 8-15 structured test cases.
+第二阶段占位内容：把已批准的模块级测试计划转换为 8 到 15 条结构化测试用例。

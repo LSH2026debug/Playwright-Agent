@@ -1,15 +1,15 @@
 # ai-playwright-poc
 
-一个从零实现的 AI 辅助 Playwright 测试生成与执行 POC。当前仓库已完成 Phase 1：
+一个从零实现的 AI 辅助 Playwright 测试生成与执行 POC。当前仓库已完成第一阶段：
 
 - Node.js + TypeScript 单仓
 - 前端使用 React + Vite
 - 后端使用 Express + 文件系统持久化
 - 实现项目初始化、需求上传、AI 规范化、人工审阅、人工批准
 - 严格执行 Human-in-the-loop 闸门，未批准不可进入下一步
-- AI 调用通过统一 LLM Adapter 封装，支持 live / template fallback / mock
+- AI 调用通过统一 LLM 适配层封装，支持实时调用、模板降级和 mock
 
-## Phase 1 已完成范围
+## 第一阶段已完成范围
 
 已实现后端 API：
 
@@ -108,7 +108,7 @@ http://127.0.0.1:5173
 http://localhost:3001
 ```
 
-## Phase 1 端到端演示步骤
+## 第一阶段端到端演示步骤
 
 1. 在前端第 1 步填写项目名称和网站 URL。
 2. 第 2 步上传 `inputs/sample-saucedemo-requirements.md`，或直接粘贴需求内容。
@@ -119,7 +119,7 @@ http://localhost:3001
 
 ## 关键工件
 
-运行后会生成以下 Phase 1 工件：
+运行后会生成以下第一阶段工件：
 
 - `artifacts/project.json`
 - `artifacts/workflow-state.json`
@@ -136,7 +136,7 @@ draft -> ai_generated -> human_reviewed -> approved -> completed
 
 说明：
 
-- `requirements_normalize` 在 Phase 1 使用到 `approved`
+- `requirements_normalize` 在第一阶段使用到 `approved`
 - 后续阶段会消费该审批结果，并继续推进到 `completed`
 - 若上一步未达到允许状态，后端返回 `409`
 
@@ -160,7 +160,7 @@ npm run dev -w backend
 npm run dev -w frontend -- --host 127.0.0.1
 ```
 
-重置 Phase 1 运行工件：
+重置第一阶段运行工件：
 
 ```powershell
 ./scripts/reset-workflow.ps1
@@ -190,7 +190,7 @@ npm run dev -w frontend -- --host 127.0.0.1
 
 ## 下一阶段
 
-Phase 2 计划实现：
+第二阶段计划实现：
 
 - `POST /api/site/explore`
 - `POST /api/plan/generate`

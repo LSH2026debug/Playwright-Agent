@@ -14,7 +14,7 @@ async function request<T>(pathname: string, init?: RequestInit): Promise<T> {
   const payload = (await response.json().catch(() => ({}))) as ApiErrorShape & T;
 
   if (!response.ok) {
-    throw new Error(payload.error?.message ?? 'Request failed.');
+    throw new Error(payload.error?.message ?? '请求失败。');
   }
 
   return payload as T;

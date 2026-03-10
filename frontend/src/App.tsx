@@ -31,22 +31,22 @@ const stepSequence: Array<{ id: StepId; label: string; description: string }> = 
   {
     id: 'site_explore',
     label: '4. 站点探索',
-    description: 'Phase 2: Playwright 受控探索与截图。',
+    description: '第二阶段：Playwright 受控探索与截图。',
   },
   {
     id: 'plan_generate',
     label: '5. 测试计划',
-    description: 'Phase 2: 基于已批准需求生成模块计划。',
+    description: '第二阶段：基于已批准需求生成模块计划。',
   },
   {
     id: 'cases_generate',
     label: '6. 测试用例',
-    description: 'Phase 2: 生成结构化测试用例。',
+    description: '第二阶段：生成结构化测试用例。',
   },
   {
     id: 'tests_generate',
     label: '7. 生成与执行',
-    description: 'Phase 2: 生成 Playwright 脚本并执行。',
+    description: '第二阶段：生成 Playwright 脚本并执行。',
   },
 ];
 
@@ -118,7 +118,7 @@ export default function App() {
     await runAction(async () => {
       const response = await generateRequirements(defaultOperator);
       setNormalizedRequirements(response.content);
-      await syncFromWorkflow(response.workflow, `AI 已生成规范化需求，模式: ${response.llm.mode}`);
+      await syncFromWorkflow(response.workflow, `AI 已生成规范化需求，当前模式：${formatLlmMode(response.llm.mode)}`);
     });
   }
 
@@ -179,7 +179,7 @@ export default function App() {
     <div className="app-shell">
       <aside className="step-rail">
         <div className="brand-block">
-          <p className="eyebrow">Phase 1</p>
+          <p className="eyebrow">第一阶段</p>
           <h1>AI Playwright POC</h1>
           <p>AI 生成与人工审批强绑定。没有批准，就没有下一步。</p>
         </div>
@@ -209,7 +209,7 @@ export default function App() {
       <main className="content-panel">
         <header className="hero-card">
           <div>
-            <p className="eyebrow">Workflow State</p>
+            <p className="eyebrow">当前工作流</p>
             <h2>{stepSequence.find((step) => step.id === activeStep)?.label}</h2>
             <p>{stepSequence.find((step) => step.id === activeStep)?.description}</p>
           </div>
@@ -280,7 +280,7 @@ export default function App() {
             <div className="panel-header">
               <div>
                 <h3>上传需求文档</h3>
-                <p>Phase 1 支持 `.md` / `.txt` 文件，也支持直接粘贴文本。</p>
+                <p>第一阶段支持 `.md` / `.txt` 文件，也支持直接粘贴文本。</p>
               </div>
             </div>
 
@@ -382,7 +382,7 @@ export default function App() {
             </div>
 
             <p>
-              Phase 1 只实现到“规范化需求 + 人工审批闸门”。当前步骤的后端 API 与前端操作面板会在 Phase 2 继续补齐。
+              第一阶段只实现到“规范化需求 + 人工审批闸门”。当前步骤的后端 API 与前端操作面板会在第二阶段继续补齐。
             </p>
           </section>
         ) : null}
@@ -532,4 +532,17 @@ function formatStatus(status: StepStatus): string {
 
 function isApprovedStatus(status: StepStatus): boolean {
   return status === 'approved' || status === 'completed';
+}
+
+function formatLlmMode(mode: string): string {
+  switch (mode) {
+    case 'live':
+      return '实时 LLM 模式';
+    case 'mock':
+      return 'Mock 模式';
+    case 'template':
+      return '模板降级模式';
+    default:
+      return mode;
+  }
 }

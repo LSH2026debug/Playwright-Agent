@@ -62,7 +62,7 @@ export class LlmAdapter {
         mode,
         provider: config.ai.provider,
         model: config.ai.model,
-        warning: config.ai.apiKey ? undefined : 'AI_API_KEY not set. Template fallback was used.',
+        warning: config.ai.apiKey ? undefined : '未配置 AI_API_KEY，已自动回退到模板生成。',
       };
     }
 
@@ -89,7 +89,7 @@ export class LlmAdapter {
           messages: [
             {
               role: 'system',
-              content: 'You are a senior QA automation architect. Return Markdown only.',
+              content: '你是一名资深 QA 自动化架构师。请只返回中文 Markdown。',
             },
             {
               role: 'user',
@@ -100,7 +100,7 @@ export class LlmAdapter {
       });
 
       if (!response.ok) {
-        throw new Error(`Upstream LLM request failed with status ${response.status}.`);
+        throw new Error(`上游 LLM 请求失败，状态码为 ${response.status}。`);
       }
 
       const data = (await response.json()) as {
@@ -114,7 +114,7 @@ export class LlmAdapter {
       const content = data.choices?.[0]?.message?.content?.trim();
 
       if (!content) {
-        throw new Error('Upstream LLM returned an empty response.');
+        throw new Error('上游 LLM 返回了空内容。');
       }
 
       return {
@@ -130,15 +130,15 @@ export class LlmAdapter {
         provider: config.ai.provider,
         model: config.ai.model,
         warning: error instanceof Error
-          ? `Live LLM request failed and template fallback was used: ${error.message}`
-          : 'Live LLM request failed and template fallback was used.',
+          ? `实时 LLM 请求失败，已回退到模板生成：${error.message}`
+          : '实时 LLM 请求失败，已回退到模板生成。',
       };
     }
   }
 
   async planToCases(): Promise<LlmGenerationResult> {
     return {
-      content: 'Phase 2 placeholder for converting an approved plan into structured cases.',
+      content: '第二阶段占位内容：把已批准的测试计划转换为结构化测试用例。',
       mode: 'template',
       provider: config.ai.provider,
       model: config.ai.model,
@@ -147,7 +147,7 @@ export class LlmAdapter {
 
   async caseToScript(): Promise<LlmGenerationResult> {
     return {
-      content: 'Phase 2 placeholder for converting an approved case into a Playwright spec.',
+      content: '第二阶段占位内容：把已批准的测试用例转换为 Playwright 脚本。',
       mode: 'template',
       provider: config.ai.provider,
       model: config.ai.model,
@@ -162,38 +162,38 @@ export class LlmAdapter {
 
 function buildMockRequirementsModule(siteUrl: string): string {
   return [
-    '# Normalized Requirements',
+    '# 规范化需求',
     '',
-    '## Normalized Scope',
-    '- Demo mode output for the AI-assisted Playwright POC.',
-    `- Target site: ${siteUrl}`,
-    '- Default modules: auth, catalog, cart, checkout.',
+    '## 规范化范围',
+    '- 这是 AI 辅助 Playwright POC 的演示模式产物。',
+    `- 目标站点：${siteUrl}`,
+    '- 默认模块：auth、catalog、cart、checkout。',
     '',
-    '## Target Site Summary',
-    '- SauceDemo is an e-commerce testing sandbox with stable login, inventory, cart, and checkout flows.',
+    '## 目标站点摘要',
+    '- SauceDemo 是一个电商测试沙箱，登录、商品列表、购物车和结账流程相对稳定。',
     '',
-    '## Modules In Scope',
-    '- auth: valid login, invalid login, session boundary.',
-    '- catalog: inventory listing, product detail consistency, sorting intent.',
-    '- cart: add to cart, remove from cart, quantity indicator.',
-    '- checkout: information form, order overview, completion screen.',
+    '## 范围内模块',
+    '- auth：有效登录、无效登录提示、会话边界。',
+    '- catalog：商品列表展示、商品详情一致性、排序意图。',
+    '- cart：加入购物车、移出购物车、数量标识。',
+    '- checkout：信息表单、订单概览、完成页。',
     '',
-    '## High Value User Flows',
-    '- Standard user logs in and lands on the inventory page.',
-    '- User adds one or more products and verifies cart state.',
-    '- User finishes checkout and reaches the confirmation page.',
+    '## 高价值用户流程',
+    '- standard_user 成功登录并进入商品列表页。',
+    '- 用户加入一个或多个商品，并验证购物车状态。',
+    '- 用户完成结账并到达确认页。',
     '',
-    '## Test Data And Environment Notes',
-    '- Primary account: standard_user / secret_sauce.',
-    '- Browser scope for this POC: Chromium only.',
+    '## 测试数据与环境说明',
+    '- 主测试账号：standard_user / secret_sauce。',
+    '- 本 POC 仅覆盖 Chromium。',
     '',
-    '## Risks And Assumptions',
-    '- Sorting rules are assumed to follow the standard SauceDemo catalog behavior.',
-    '- Network stubbing is out of scope for Phase 1.',
+    '## 风险与假设',
+    '- 默认假设排序规则遵循 SauceDemo 标准商品列表行为。',
+    '- 第一阶段不包含网络桩和接口模拟。',
     '',
-    '## Approval Checklist',
-    '- Confirm module names match the expected business scope.',
-    '- Confirm the listed flows are the intended high-priority regressions.',
+    '## 审批检查清单',
+    '- 确认模块名称与预期业务范围一致。',
+    '- 确认列出的流程属于当前优先级最高的回归范围。',
   ].join('\n');
 }
 
@@ -205,37 +205,37 @@ function buildTemplateRequirementsModule(siteUrl: string, sourceText: string): s
     .slice(0, 6);
 
   const modules = inferModules(sourceText, siteUrl);
-  const flowLines = modules.map((moduleName) => `- ${moduleName}: ${describeFlow(moduleName)}`);
-  const acceptanceChecklist = modules.map((moduleName) => `- ${moduleName}: reviewed and approved for downstream test planning.`);
+  const flowLines = modules.map((moduleName) => `- ${moduleName}：${describeFlow(moduleName)}`);
+  const acceptanceChecklist = modules.map((moduleName) => `- ${moduleName}：已完成审阅，可进入后续测试计划设计。`);
 
   return [
-    '# Normalized Requirements',
+    '# 规范化需求',
     '',
-    '## Normalized Scope',
-    `- Target site: ${siteUrl}`,
-    '- Workflow objective: convert raw product notes into human-reviewable QA modules.',
-    '- Delivery constraint: every downstream step is blocked until this artifact is approved.',
+    '## 规范化范围',
+    `- 目标站点：${siteUrl}`,
+    '- 工作流目标：把原始产品需求整理为可供人工审阅的测试模块。',
+    '- 交付约束：该产物未获批准前，后续步骤全部阻塞。',
     '',
-    '## Target Site Summary',
+    '## 目标站点摘要',
     ...summaryLines.map((line) => `- ${line}`),
     '',
-    '## Modules In Scope',
+    '## 范围内模块',
     ...modules.map((moduleName) => `- ${moduleName}`),
     '',
-    '## High Value User Flows',
+    '## 高价值用户流程',
     ...flowLines,
     '',
-    '## Test Data And Environment Notes',
-    '- Browser scope in this POC: Chromium only.',
-    '- Data storage in this POC: local files only.',
-    '- Output must remain readable and editable before approval.',
+    '## 测试数据与环境说明',
+    '- 本 POC 仅覆盖 Chromium。',
+    '- 本 POC 仅使用本地文件存储数据。',
+    '- 所有输出在批准前都必须保持可读、可编辑。',
     '',
-    '## Risks And Assumptions',
-    `- Module inference is template-based${config.ai.apiKey ? ' when live generation is unavailable.' : ' because no API key is configured.'}`,
-    '- Fine-grained page metadata and screenshots are deferred to the site exploration step.',
-    '- Self-healing and generic crawling are explicitly out of scope.',
+    '## 风险与假设',
+    `- 当前模块推断采用模板策略${config.ai.apiKey ? '，仅在实时生成不可用时启用。' : '，原因是未配置 API Key。'}`,
+    '- 细粒度页面元数据和截图会延后到站点探索步骤处理。',
+    '- 本项目明确不包含 self-healing 和通用爬取能力。',
     '',
-    '## Approval Checklist',
+    '## 审批检查清单',
     ...acceptanceChecklist,
   ].join('\n');
 }
@@ -270,15 +270,15 @@ function inferModules(sourceText: string, siteUrl: string): string[] {
 function describeFlow(moduleName: string): string {
   switch (moduleName) {
     case 'auth':
-      return 'validate successful login, failed login feedback, and landing page expectations';
+      return '验证成功登录、失败登录提示以及登录后的落地页是否符合预期';
     case 'catalog':
-      return 'validate inventory visibility, primary product interactions, and critical navigation';
+      return '验证商品列表可见性、主要商品交互和关键导航链路';
     case 'cart':
-      return 'validate add/remove operations and cart state persistence';
+      return '验证加入购物车、移除商品以及购物车状态保持';
     case 'checkout':
-      return 'validate checkout information capture, summary review, and completion outcome';
+      return '验证结账信息填写、订单概览确认以及完成页结果';
     default:
-      return 'validate the module primary happy path and one critical negative path';
+      return '验证模块主路径以及一个关键负向路径';
   }
 }
 

@@ -19,4 +19,10 @@ foreach ($relativePath in $targets) {
 Set-Content -Path (Join-Path $root 'metadata/site/pages.yaml') -Value "pages: []`n"
 Set-Content -Path (Join-Path $root 'metadata/site/flows.yaml') -Value "flows: []`n"
 
-Write-Host 'Workflow artifacts reset for Phase 1.'
+$message = [string]::Concat(
+  [char]0x5DF2, [char]0x91CD, [char]0x7F6E, [char]0x7B2C, [char]0x4E00,
+  [char]0x9636, [char]0x6BB5, [char]0x7684, [char]0x5DE5, [char]0x4F5C,
+  [char]0x6D41, [char]0x4EA7, [char]0x7269, [char]0x3002
+)
+
+Write-Host $message

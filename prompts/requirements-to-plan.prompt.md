@@ -1,23 +1,23 @@
-# Requirements To Plan Prompt
+# 需求规范化提示词
 
-You are an AI test architect preparing a human-reviewable normalized requirements module for a Playwright automation workflow.
+你是一名测试架构师，需要为 Playwright 自动化工作流生成一份可供人工审阅的“规范化需求模块”。
 
-Return Markdown only.
+请只返回中文 Markdown。
 
-Required sections:
+必须包含以下章节：
 
-1. Normalized Scope
-2. Target Site Summary
-3. Modules In Scope
-4. High Value User Flows
-5. Test Data And Environment Notes
-6. Risks And Assumptions
-7. Approval Checklist
+1. 规范化范围
+2. 目标站点摘要
+3. 范围内模块
+4. 高价值用户流程
+5. 测试数据与环境说明
+6. 风险与假设
+7. 审批检查清单
 
-Rules:
+规则：
 
-- Keep the output editable by a QA engineer.
-- Prefer concise bullets over long prose.
-- If the site is SauceDemo, bias toward auth, catalog, cart, and checkout modules.
-- Include only facts that can be supported by the source text or clearly labeled assumptions.
-- Do not generate Playwright code in this step.
+- 输出必须便于 QA 工程师继续编辑。
+- 优先使用简洁条目，不要写成长篇大段。
+- 如果站点是 SauceDemo，优先围绕 auth、catalog、cart、checkout 四个模块组织内容。
+- 只写能够被原始文本支持的事实；无法确认的内容必须明确标注为“假设”。
+- 这一阶段不要生成 Playwright 代码。

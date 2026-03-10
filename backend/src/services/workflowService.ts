@@ -21,14 +21,14 @@ import type {
 import { stepIds } from '../types/workflow.js';
 
 const stepTitles: Record<StepId, string> = {
-  project_init: 'Project Initialization',
-  requirements_upload: 'Requirements Upload',
-  requirements_normalize: 'Requirements Normalize',
-  site_explore: 'Site Exploration',
-  plan_generate: 'Plan Generation',
-  cases_generate: 'Case Generation',
-  tests_generate: 'Test Generation',
-  tests_run: 'Test Execution',
+  project_init: '项目初始化',
+  requirements_upload: '需求上传',
+  requirements_normalize: '需求规范化',
+  site_explore: '站点探索',
+  plan_generate: '测试计划生成',
+  cases_generate: '测试用例生成',
+  tests_generate: '测试脚本生成',
+  tests_run: '测试执行',
 };
 
 const transitionMap: Record<StepStatus, StepStatus[]> = {
@@ -78,14 +78,14 @@ export async function initializeProject(input: {
   const approvalRecord = updateStep(state, 'project_init', 'completed', {
     artifacts: [
       {
-        label: 'Project metadata',
+        label: '项目元数据',
         path: toRelativePath(paths.projectMetaFile),
         kind: 'json',
       },
     ],
     actor: operator,
-    action: 'init',
-    message: `Initialized project for ${input.siteUrl}.`,
+    action: '初始化',
+    message: `已完成项目初始化，目标站点为 ${input.siteUrl}。`,
   });
 
   if (approvalRecord) {
@@ -110,8 +110,8 @@ export async function markRequirementsUploaded(input: {
   const approvalRecord = updateStep(state, 'requirements_upload', 'completed', {
     artifacts: [input.artifact],
     actor: operator,
-    action: 'upload',
-    message: 'Uploaded source requirements.',
+    action: '上传',
+    message: '已上传原始需求文档。',
   });
 
   if (approvalRecord) {
@@ -140,8 +140,8 @@ export async function markRequirementsGenerated(input: {
   const approvalRecord = updateStep(state, 'requirements_normalize', 'ai_generated', {
     artifacts: input.artifacts,
     actor: operator,
-    action: 'generate',
-    message: `Generated normalized requirements with ${input.llmMode} mode.`,
+    action: '生成',
+    message: `已使用${formatLlmModeLabel(input.llmMode)}生成规范化需求。`,
   });
 
   if (approvalRecord) {
@@ -164,8 +164,8 @@ export async function markStepReviewed(input: {
 
   const approvalRecord = updateStep(state, input.stepId, 'human_reviewed', {
     actor: operator,
-    action: 'review',
-    message: 'Saved human review edits.',
+    action: '审阅',
+    message: '已保存人工审阅内容。',
     approvalAction: 'reviewed',
     notes: input.notes,
   });
@@ -190,8 +190,8 @@ export async function approveStep(input: {
 
   const approvalRecord = updateStep(state, input.stepId, 'approved', {
     actor: operator,
-    action: 'approve',
-    message: 'Approved step for downstream execution.',
+    action: '批准',
+    message: '当前步骤已批准，可以进入下一环节。',
     approvalAction: 'approved',
     notes: input.notes,
   });
@@ -300,7 +300,7 @@ function updateStep(
     throw new ApiError(
       409,
       'invalid_step_transition',
-      `Cannot move ${stepId} from ${current.status} to ${nextStatus}.`,
+      `步骤 ${stepId} 不能从 ${current.status} 变更为 ${nextStatus}。`,
     );
   }
 
@@ -347,7 +347,7 @@ function ensureStepStatus(
     throw new ApiError(
       409,
       'step_not_ready',
-      `Step ${stepId} must be in [${allowedStatuses.join(', ')}] but is ${step.status}.`,
+      `步骤 ${stepId} 当前状态为 ${step.status}，必须先达到 [${allowedStatuses.join(', ')}] 才能继续。`,
     );
   }
 
@@ -407,4 +407,17 @@ async function writeMissingJson(targetPath: string, defaultValue: unknown): Prom
 
 function collectArtifacts(state: WorkflowState): ArtifactRef[] {
   return mergeArtifacts([], Object.values(state.steps).flatMap((step) => step.artifacts));
+}
+
+function formatLlmModeLabel(mode: string): string {
+  switch (mode) {
+    case 'live':
+      return '实时 LLM 模式';
+    case 'mock':
+      return 'Mock 模式';
+    case 'template':
+      return '模板降级模式';
+    default:
+      return `${mode} 模式`;
+  }
 }

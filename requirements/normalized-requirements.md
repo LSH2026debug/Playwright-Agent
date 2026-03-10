@@ -1,42 +1,42 @@
-# Normalized Requirements
+# 规范化需求
 
-## Normalized Scope
-- Target site: https://www.saucedemo.com/
-- Workflow objective: convert raw product notes into human-reviewable QA modules.
-- Delivery constraint: every downstream step is blocked until this artifact is approved.
+## 规范化范围
+- 目标站点：https://www.saucedemo.com/
+- 工作流目标：把原始产品需求整理为可供人工审阅的测试模块。
+- 交付约束：该产物未获批准前，后续步骤全部阻塞。
 
-## Target Site Summary
-- # SauceDemo POC Requirements
-- ????? SauceDemo?
-- ???????????????:
-- - auth: ???????????
-- - catalog: ???????????????
-- - cart: ?????????????
+## 目标站点摘要
+- # SauceDemo POC 需求说明
+- 目标站点是 SauceDemo。
+- 本阶段希望覆盖以下核心业务模块：
+- - auth: 用户登录与登录失败提示
+- - catalog: 商品列表浏览与商品详情基础校验
+- - cart: 加购、购物车数量与删除商品
 
-## Modules In Scope
+## 范围内模块
 - auth
 - catalog
 - cart
 - checkout
 
-## High Value User Flows
-- auth: validate successful login, failed login feedback, and landing page expectations
-- catalog: validate inventory visibility, primary product interactions, and critical navigation
-- cart: validate add/remove operations and cart state persistence
-- checkout: validate checkout information capture, summary review, and completion outcome
+## 高价值用户流程
+- auth：验证成功登录、失败登录提示以及登录后的落地页是否符合预期
+- catalog：验证商品列表可见性、主要商品交互和关键导航链路
+- cart：验证加入购物车、移除商品以及购物车状态保持
+- checkout：验证结账信息填写、订单概览确认以及完成页结果
 
-## Test Data And Environment Notes
-- Browser scope in this POC: Chromium only.
-- Data storage in this POC: local files only.
-- Output must remain readable and editable before approval.
+## 测试数据与环境说明
+- 本 POC 仅覆盖 Chromium。
+- 本 POC 仅使用本地文件存储数据。
+- 所有输出在批准前都必须保持可读、可编辑。
 
-## Risks And Assumptions
-- Module inference is template-based because no API key is configured.
-- Fine-grained page metadata and screenshots are deferred to the site exploration step.
-- Self-healing and generic crawling are explicitly out of scope.
+## 风险与假设
+- 当前模块推断采用模板策略，原因是未配置 API Key。
+- 细粒度页面元数据和截图会延后到站点探索步骤处理。
+- 本项目明确不包含 self-healing 和通用爬取能力。
 
-## Approval Checklist
-- auth: reviewed and approved for downstream test planning.
-- catalog: reviewed and approved for downstream test planning.
-- cart: reviewed and approved for downstream test planning.
-- checkout: reviewed and approved for downstream test planning.
+## 审批检查清单
+- auth：已完成审阅，可进入后续测试计划设计。
+- catalog：已完成审阅，可进入后续测试计划设计。
+- cart：已完成审阅，可进入后续测试计划设计。
+- checkout：已完成审阅，可进入后续测试计划设计。

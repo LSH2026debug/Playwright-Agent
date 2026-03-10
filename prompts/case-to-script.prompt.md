@@ -1,3 +1,3 @@
-# Case To Script Prompt
+# 用例转脚本提示词
 
-Phase 2 placeholder. Convert one approved structured test case into one Playwright spec file.
+第二阶段占位内容：把一条已批准的结构化测试用例转换为一份 Playwright 规范脚本文件。

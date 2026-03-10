@@ -17,18 +17,18 @@ const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
 
 const initProjectSchema = z.object({
-  projectName: z.string().trim().min(1).default('ai-playwright-poc'),
-  siteUrl: z.string().trim().url(),
-  operator: z.string().trim().min(1).default(config.defaultOperator),
+  projectName: z.string().trim().min(1, '项目名称不能为空。').default('ai-playwright-poc'),
+  siteUrl: z.string().trim().url('请输入合法的网站 URL。'),
+  operator: z.string().trim().min(1, '操作人不能为空。').default(config.defaultOperator),
 });
 
 const operatorSchema = z.object({
-  operator: z.string().trim().min(1).default(config.defaultOperator),
-  notes: z.string().trim().max(500).optional(),
+  operator: z.string().trim().min(1, '操作人不能为空。').default(config.defaultOperator),
+  notes: z.string().trim().max(500, '备注不能超过 500 个字符。').optional(),
 });
 
 const reviewSchema = operatorSchema.extend({
-  content: z.string().min(1),
+  content: z.string().min(1, '审阅内容不能为空。'),
 });
 
 router.post('/project/init', handleAsync(async (req, res) => {
@@ -46,11 +46,11 @@ router.post('/requirements/upload', upload.single('file'), handleAsync(async (re
   const uploadedFile = req.file;
 
   if (!uploadedFile && !inlineText) {
-    throw new ApiError(400, 'missing_requirements', 'Provide a .md/.txt file or paste requirements text.');
+    throw new ApiError(400, 'missing_requirements', '请上传 .md 或 .txt 文件，或直接粘贴需求文本。');
   }
 
   if (uploadedFile && !/\.(md|txt)$/i.test(uploadedFile.originalname)) {
-    throw new ApiError(400, 'unsupported_file_type', 'Only .md and .txt uploads are supported in Phase 1.');
+    throw new ApiError(400, 'unsupported_file_type', '第一阶段只支持上传 .md 和 .txt 文件。');
   }
 
   const sourceText = uploadedFile ? uploadedFile.buffer.toString('utf8') : inlineText;
@@ -79,7 +79,7 @@ router.post('/steps/:stepId/review', handleAsync(async (req, res) => {
   const stepId = parseStepId(readSingleRouteParam(req.params.stepId));
 
   if (stepId !== 'requirements_normalize') {
-    throw new ApiError(501, 'review_not_implemented', `Review endpoint for ${stepId} will be implemented in Phase 2.`);
+    throw new ApiError(501, 'review_not_implemented', `${stepId} 的审阅接口将在第二阶段实现。`);
   }
 
   const state = await saveRequirementsReview({
@@ -131,7 +131,7 @@ router.use((error: unknown, _req: Request, res: Response, _next: NextFunction) =
     return;
   }
 
-  const fallbackMessage = error instanceof Error ? error.message : 'Unknown server error.';
+  const fallbackMessage = error instanceof Error ? error.message : '服务端发生未知错误。';
   res.status(500).json({
     ok: false,
     error: {
@@ -166,7 +166,7 @@ function parseStepId(rawStepId: string): StepId {
     return rawStepId as StepId;
   }
 
-  throw new ApiError(400, 'invalid_step_id', `Unsupported step id: ${rawStepId}`);
+  throw new ApiError(400, 'invalid_step_id', `不支持的步骤标识：${rawStepId}`);
 }
 
 function readSingleRouteParam(rawValue: string | string[] | undefined): string {

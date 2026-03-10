@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-03-09T09:36:13.109Z",
+  "generatedAt": "2026-03-10T03:10:42.222Z",
   "mode": "template",
   "provider": "openai-compatible",
   "model": "gpt-4.1-mini",
-  "warning": "AI_API_KEY not set. Template fallback was used."
+  "warning": "未配置 AI_API_KEY，已自动回退到模板生成。"
 }
