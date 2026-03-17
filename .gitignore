@@ -8,3 +8,11 @@ backend/dist/
 *.tsbuildinfo
 frontend/vite.config.js
 frontend/vite.config.d.ts
+
+# 生成的文档和测试文件
+docs/PR_*.md
+artifacts/
+inputs/
+metadata/
+plans/
+cases/
