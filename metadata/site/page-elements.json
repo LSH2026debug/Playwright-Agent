@@ -1,0 +1,1553 @@
+{
+  "generatedAt": "2026-03-17T06:24:21.639Z",
+  "pages": [
+    {
+      "id": "home",
+      "url": "http://localhost:8080/index.php?m=my&f=index",
+      "title": "地盘 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php",
+      "url": "http://localhost:8080/index.php?m=product&f=all",
+      "title": "产品 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-2",
+      "url": "http://localhost:8080/index.php?m=project&f=browse",
+      "title": "项目列表 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-3",
+      "url": "http://localhost:8080/index.php?m=execution&f=create",
+      "title": "添加执行 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-4",
+      "url": "http://localhost:8080/index.php?m=qa&f=index",
+      "title": "仪表盘 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-5",
+      "url": "http://localhost:8080/index.php?m=repo&f=maintain",
+      "title": "代码库-浏览 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-6",
+      "url": "http://localhost:8080/index.php?m=aiapp&f=square",
+      "title": "小程序 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-7",
+      "url": "http://localhost:8080/index.php?m=screen&f=browse",
+      "title": "大屏 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-8",
+      "url": "http://localhost:8080/index.php?m=kanban&f=space",
+      "title": "看板空间 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-9",
+      "url": "http://localhost:8080/index.php?m=doc&f=mySpace&objectID=3",
+      "title": "我的空间 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-10",
+      "url": "http://localhost:8080/index.php?m=my&f=team",
+      "title": "团队 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    },
+    {
+      "id": "index-php-11",
+      "url": "http://localhost:8080/index.php?m=admin&f=index",
+      "title": "后台 - 禅道",
+      "interactiveElements": [
+        {
+          "tag": "a",
+          "text": "地盘",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '地盘' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "产品",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '产品' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "项目",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '项目' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "执行",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '执行' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "测试",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '测试' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "DevOps",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'DevOps' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "AI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'AI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "BI",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: 'BI' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "看板",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '看板' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "文档",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '文档' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "组织",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '组织' })",
+          "isUnique": false
+        },
+        {
+          "tag": "a",
+          "text": "后台",
+          "selector": "a.rounded.show-in-app",
+          "playwrightLocator": "page.getByRole('link', { name: '后台' })",
+          "isUnique": false
+        },
+        {
+          "tag": "button",
+          "text": "研发综合界面",
+          "selector": "#versionMenu-toggle",
+          "playwrightLocator": "page.getByRole('button', { name: '研发综合界面' })",
+          "type": "button",
+          "isUnique": true
+        },
+        {
+          "tag": "a",
+          "text": "开源版21.7",
+          "selector": "a.toolbar-item.ghost",
+          "playwrightLocator": "page.getByRole('link', { name: '开源版21.7' })",
+          "isUnique": true
+        },
+        {
+          "tag": "button",
+          "text": "升级",
+          "selector": "#bizLink",
+          "playwrightLocator": "page.getByRole('button', { name: '升级' })",
+          "type": "button",
+          "isUnique": true
+        }
+      ],
+      "formFields": [
+        {
+          "tag": "input",
+          "type": "text",
+          "selector": "#search-box-22",
+          "playwrightLocator": "page.getByPlaceholder('搜索')",
+          "label": "",
+          "placeholder": "搜索",
+          "required": false,
+          "isUnique": true
+        }
+      ],
+      "dialogs": [],
+      "tables": [],
+      "apiRequests": []
+    }
+  ]
+}

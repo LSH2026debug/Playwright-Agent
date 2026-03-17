@@ -6,11 +6,17 @@ import yaml from 'js-yaml';
 import { config } from '../config.js';
 import { paths, toRelativePath } from '../utils/paths.js';
 import { ApiError } from '../utils/apiError.js';
+import { logger } from '../utils/logger.js';
 import { ensureDir, fileExists, writeJson, writeText } from './storage.js';
 import { getWorkflowPayload, markStepReviewed } from './workflowService.js';
 import { loadWorkflowAndTransition } from './workflowTransitions.js';
 import { getLoginSessionStatus } from './loginSessionService.js';
 import type { ArtifactRef, ProjectAuthConfig, WorkflowState } from '../types/workflow.js';
+import {
+  buildBestSelectorFn,
+  buildPlaywrightLocatorFn,
+  accessibilityTreeScript,
+} from './selectorBuilder.js';
 
 interface InteractiveElement {
   tag: string;
@@ -120,6 +126,8 @@ export async function exploreSite(input: {
     screenshots: string[];
   };
 }> {
+  logger.info('Starting site exploration', { maxPages: input.maxPages });
+  
   const workflow = await getWorkflowPayload();
 
   if (!workflow.workflow.project) {
@@ -151,6 +159,7 @@ export async function exploreSite(input: {
       ? 'credentials'
       : 'none';
 
+  logger.info('Creating explore runtime', { authMethod, useStoredSession: loginConfig.useStoredSession });
   const runtime = await createExploreRuntime(loginConfig.useStoredSession);
 
   try {
@@ -934,47 +943,6 @@ async function collectVisibleTexts(page: Page, selector: string, limit: number):
   return texts.filter(Boolean);
 }
 
-function buildBestSelector(el: Element): string {
-  if (el.id) return `#${el.id}`;
-  const testId = el.getAttribute('data-testid') || el.getAttribute('data-test') || el.getAttribute('data-cy');
-  if (testId) return `[data-testid="${testId}"]`;
-  const ariaLabel = el.getAttribute('aria-label');
-  if (ariaLabel) return `[aria-label="${ariaLabel}"]`;
-  const role = el.getAttribute('role');
-  const tag = el.tagName.toLowerCase();
-  const type = el.getAttribute('type');
-  const name = el.getAttribute('name');
-  const placeholder = el.getAttribute('placeholder');
-  if (name) return `${tag}[name="${name}"]`;
-  if (placeholder) return `${tag}[placeholder="${placeholder}"]`;
-  if (type && tag === 'input') return `input[type="${type}"]`;
-  const classList = Array.from(el.classList).filter(c => !c.startsWith('el-') || /el-(button|input|select|menu-item|dialog|form-item)/.test(c)).slice(0, 2);
-  if (classList.length > 0) {
-    const classSelector = `${tag}.${classList.join('.')}`;
-    if (role) return `${classSelector}[role="${role}"]`;
-    return classSelector;
-  }
-  if (role) return `${tag}[role="${role}"]`;
-  return tag;
-}
-
-function buildPlaywrightLocator(el: Element): string {
-  const text = (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-  const ariaLabel = el.getAttribute('aria-label');
-  const role = el.getAttribute('role');
-  const tag = el.tagName.toLowerCase();
-  const placeholder = el.getAttribute('placeholder');
-  const testId = el.getAttribute('data-testid') || el.getAttribute('data-test');
-  if (testId) return `page.getByTestId('${testId}')`;
-  if (role && text) return `page.getByRole('${role}', { name: '${text.slice(0, 40)}' })`;
-  if (tag === 'button' && text) return `page.getByRole('button', { name: '${text.slice(0, 40)}' })`;
-  if (tag === 'a' && text) return `page.getByRole('link', { name: '${text.slice(0, 40)}' })`;
-  if (ariaLabel) return `page.getByLabel('${ariaLabel}')`;
-  if (placeholder) return `page.getByPlaceholder('${placeholder}')`;
-  if (text && (tag === 'span' || tag === 'div' || tag === 'li')) return `page.getByText('${text.slice(0, 40)}')`;
-  return `page.locator('${buildBestSelector(el)}')`;
-}
-
 async function collectInteractiveElements(page: Page, limit: number): Promise<InteractiveElement[]> {
   const selector = [
     'button:not([disabled])',
@@ -994,9 +962,15 @@ async function collectInteractiveElements(page: Page, limit: number): Promise<In
   ].join(', ');
 
   const raw = await page.locator(selector).evaluateAll((elements, params) => {
-    const { maxSize, buildSelectorFn, buildLocatorFn } = params as { maxSize: number; buildSelectorFn: string; buildLocatorFn: string };
-    const buildSel = new Function('el', buildSelectorFn) as (el: Element) => string;
-    const buildLoc = new Function('el', buildLocatorFn) as (el: Element) => string;
+    const { maxSize, buildSelectorSrc, buildLocatorSrc } = params as { 
+      maxSize: number; 
+      buildSelectorSrc: string; 
+      buildLocatorSrc: string 
+    };
+    // 在浏览器端通过 Function 构造器创建函数
+    const buildSel = new Function('return ' + buildSelectorSrc)();
+    const buildLoc = new Function('return ' + buildLocatorSrc)();
+    
     const seen = new Set<string>();
     return elements
       .map((el) => {
@@ -1024,10 +998,10 @@ async function collectInteractiveElements(page: Page, limit: number): Promise<In
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
       .slice(0, Number(maxSize));
-  }, {
-    maxSize: limit,
-    buildSelectorFn: `return (${buildBestSelector.toString()})(el)`,
-    buildLocatorFn: `return (${buildPlaywrightLocator.toString()})(el)`,
+  }, { 
+    maxSize: limit, 
+    buildSelectorSrc: buildBestSelectorFn, 
+    buildLocatorSrc: buildPlaywrightLocatorFn 
   });
 
   return raw;
@@ -1035,10 +1009,16 @@ async function collectInteractiveElements(page: Page, limit: number): Promise<In
 
 async function collectFormFields(page: Page, containerSelector?: string): Promise<FormField[]> {
   const scope = containerSelector || 'body';
+  
   const raw = await page.locator(`${scope}`).evaluateAll((containers, params) => {
-    const { buildSelectorFn, buildLocatorFn } = params as { buildSelectorFn: string; buildLocatorFn: string };
-    const buildSel = new Function('el', buildSelectorFn) as (el: Element) => string;
-    const buildLoc = new Function('el', buildLocatorFn) as (el: Element) => string;
+    const { buildSelectorSrc, buildLocatorSrc } = params as { 
+      buildSelectorSrc: string; 
+      buildLocatorSrc: string 
+    };
+    // 在浏览器端通过 Function 构造器创建函数
+    const buildSel = new Function('return ' + buildSelectorSrc)();
+    const buildLoc = new Function('return ' + buildLocatorSrc)();
+    
     const container = containers[0] || document.body;
     const fields = container.querySelectorAll('input, select, textarea, .el-input__inner, .el-textarea__inner, .el-select');
     const seen = new Set<string>();
@@ -1095,9 +1075,9 @@ async function collectFormFields(page: Page, containerSelector?: string): Promis
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
       .slice(0, 50);
-  }, {
-    buildSelectorFn: `return (${buildBestSelector.toString()})(el)`,
-    buildLocatorFn: `return (${buildPlaywrightLocator.toString()})(el)`,
+  }, { 
+    buildSelectorSrc: buildBestSelectorFn, 
+    buildLocatorSrc: buildPlaywrightLocatorFn 
   });
 
   return raw;
@@ -1251,84 +1231,9 @@ async function collectTableStructures(page: Page): Promise<TableInfo[]> {
 
 async function collectAccessibilityTree(page: Page): Promise<AccessibilityNode[]> {
   try {
-    return page.evaluate(() => {
-      interface ANode { role: string; name: string; children?: ANode[] }
-      const skipRoles = new Set(['generic', 'none', 'presentation']);
-      const MAX_DEPTH = 4;
-      const MAX_CHILDREN = 20;
-
-      function getRole(el: Element): string {
-        const explicit = el.getAttribute('role');
-        if (explicit) return explicit;
-        const tag = el.tagName.toLowerCase();
-        const roleMap: Record<string, string> = {
-          button: 'button', a: 'link', input: 'textbox', select: 'combobox',
-          textarea: 'textbox', nav: 'navigation', main: 'main', header: 'banner',
-          footer: 'contentinfo', form: 'form', table: 'table', dialog: 'dialog',
-          img: 'img', h1: 'heading', h2: 'heading', h3: 'heading', h4: 'heading',
-          ul: 'list', ol: 'list', li: 'listitem',
-        };
-        if (tag === 'input') {
-          const t = el.getAttribute('type');
-          if (t === 'checkbox') return 'checkbox';
-          if (t === 'radio') return 'radio';
-          if (t === 'submit' || t === 'button') return 'button';
-          return 'textbox';
-        }
-        return roleMap[tag] || 'generic';
-      }
-
-      function getName(el: Element): string {
-        const ariaLabel = el.getAttribute('aria-label');
-        if (ariaLabel) return ariaLabel;
-        const ariaLabelledBy = el.getAttribute('aria-labelledby');
-        if (ariaLabelledBy) {
-          const ref = document.getElementById(ariaLabelledBy);
-          if (ref) return (ref.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-        }
-        const tag = el.tagName.toLowerCase();
-        if (tag === 'input' || tag === 'textarea' || tag === 'select') {
-          const placeholder = el.getAttribute('placeholder');
-          if (placeholder) return placeholder;
-          const id = el.getAttribute('id');
-          if (id) {
-            const label = document.querySelector(`label[for="${id}"]`);
-            if (label) return (label.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-          }
-          return '';
-        }
-        if (tag === 'img') return el.getAttribute('alt') || '';
-        const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
-        return text.slice(0, 60);
-      }
-
-      function walk(el: Element, depth: number): ANode | null {
-        if (depth > MAX_DEPTH) return null;
-        const rect = el.getBoundingClientRect();
-        if (!rect.width && !rect.height) return null;
-
-        const role = getRole(el);
-        const name = getName(el);
-
-        const childEls = Array.from(el.children);
-        const children = childEls
-          .map(c => walk(c, depth + 1))
-          .filter((c): c is ANode => c !== null)
-          .slice(0, MAX_CHILDREN);
-
-        if (skipRoles.has(role) && !name && children.length <= 1) {
-          return children[0] || null;
-        }
-
-        if (skipRoles.has(role) && !name && children.length === 0) return null;
-
-        return { role, name, ...(children.length > 0 ? { children } : {}) };
-      }
-
-      const root = document.querySelector('.app-main') || document.querySelector('main') || document.body;
-      const result = walk(root, 0);
-      return result?.children || (result ? [result] : []);
-    });
+    return page.evaluate((script) => {
+      return new Function('return ' + script)();
+    }, accessibilityTreeScript);
   } catch {
     return [];
   }

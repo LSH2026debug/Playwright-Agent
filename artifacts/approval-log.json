@@ -172,5 +172,35 @@
     "action": "approved",
     "actor": "local-user",
     "timestamp": "2026-03-10T09:24:49.597Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-17T03:11:29.923Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-17T03:11:52.057Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-17T03:11:52.770Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-17T06:17:20.946Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-17T06:17:21.496Z"
   }
 ]

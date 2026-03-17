@@ -1,11 +1,11 @@
 {
-  "name": "星宫",
-  "siteUrl": "https://zodiactest.ny-zodiac.com:8443/index",
+  "name": "禅道",
+  "siteUrl": "http://localhost:8080/",
   "operator": "local-user",
   "auth": {
     "requiresLogin": true,
-    "loginUrl": "https://zodiactest.ny-zodiac.com:8443/index"
+    "loginUrl": "http://localhost:8080/index"
   },
   "createdAt": "2026-03-10T06:09:17.138Z",
-  "updatedAt": "2026-03-10T08:06:26.468Z"
+  "updatedAt": "2026-03-17T06:09:30.888Z"
 }

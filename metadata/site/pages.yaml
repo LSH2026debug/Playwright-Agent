@@ -1,595 +1,301 @@
 pages:
   - id: home
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/index
-    headings:
-      - Home/
-      - Home
+    title: 地盘 - 禅道
+    url: http://localhost:8080/index.php?m=my&f=index
+    headings: []
     roleHints:
-      - English
-      - 当前位于新会话
-      - 请选择MCP服务
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-      - AI PPT
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
     screenshot: metadata/screenshots/home.png
-  - id: all-in-one
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/AllInOne
-    headings:
-      - 首页/
-      - All-In-One/
-      - All-In-One
-      - deepseek-r1deepseek-r1deepseek-v3o1-minio1-previewgpt-4oglm-4claude3claude3.5 联网搜索
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php
+    title: 产品 - 禅道
+    url: http://localhost:8080/index.php?m=product&f=all
+    headings: []
     roleHints:
-      - English
-      - deepseek-r1
-      - 当前位于新会话
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-      - AI PPT
-    screenshot: metadata/screenshots/all-in-one.png
-  - id: ai-ppt
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Aippt
-    headings:
-      - 首页/
-      - AI PPT/
-      - AI PPT
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-2
+    title: 项目列表 - 禅道
+    url: http://localhost:8080/index.php?m=project&f=browse
+    headings: []
     roleHints:
-      - English
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-      - AI PPT
-      - ChatBI
-      - Model Management
-    screenshot: metadata/screenshots/ai-ppt.png
-  - id: private-search
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/data/KBChat
-    headings:
-      - 首页/
-      - Knowledge Base/
-      - Private Search/
-      - Private Search
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-2.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-3
+    title: 添加执行 - 禅道
+    url: http://localhost:8080/index.php?m=execution&f=create
+    headings: []
     roleHints:
-      - English
-      - 当前位于新会话
-      - 换一批
-      - deepseek-r1
-      - 知识库 (全部)
-      - RAG
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-    screenshot: metadata/screenshots/private-search.png
-  - id: knowledge-base-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/data/KBManager
-    headings:
-      - 首页/
-      - Knowledge Base/
-      - Knowledge Base Management/
-      - Knowledge Base Management
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-3.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-4
+    title: 仪表盘 - 禅道
+    url: http://localhost:8080/index.php?m=qa&f=index
+    headings: []
     roleHints:
-      - English
-      - 重置
-      - 搜索
-      - 新建知识库
-      - 图谱抽取
-      - 删除
-      - 论文库
-      - 查看图谱
-      - 编辑
-      - 天文学
-    screenshot: metadata/screenshots/knowledge-base-management.png
-  - id: file-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/data/FileManager
-    headings:
-      - 首页/
-      - Knowledge Base/
-      - File Management/
-      - File Management
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-4.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-5
+    title: 代码库-浏览 - 禅道
+    url: http://localhost:8080/index.php?m=repo&f=maintain
+    headings: []
     roleHints:
-      - English
-      - 重置
-      - 查询
-      - 刷新
-      - 导出
-      - 启用
-      - 停用
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-    screenshot: metadata/screenshots/file-management.png
-  - id: q-a-history
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/data/history
-    headings:
-      - 首页/
-      - Knowledge Base/
-      - Q&A History/
-      - Q&A History
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-5.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-6
+    title: 小程序 - 禅道
+    url: http://localhost:8080/index.php?m=aiapp&f=square
+    headings: []
     roleHints:
-      - English
-      - 重置
-      - 搜索
-      - 查看
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Private Search
-      - Knowledge Base Management
-    screenshot: metadata/screenshots/q-a-history.png
-  - id: authorization-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/data/KBAuthManager
-    headings:
-      - 首页/
-      - Knowledge Base/
-      - Authorization Management/
-      - Authorization Management
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-6.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-7
+    title: 大屏 - 禅道
+    url: http://localhost:8080/index.php?m=screen&f=browse
+    headings: []
     roleHints:
-      - English
-      - 重置
-      - 搜索
-      - 共 3 个
-      - 共 12 个
-      - 共 1 个
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-    screenshot: metadata/screenshots/authorization-management.png
-  - id: knowledge-graph
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/showGraph
-    headings:
-      - 首页/
-      - 知识图谱/
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-7.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-8
+    title: 看板空间 - 禅道
+    url: http://localhost:8080/index.php?m=kanban&f=space
+    headings: []
     roleHints:
-      - English
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Private Search
-      - Knowledge Base Management
-      - File Management
-      - Q&A History
-      - Authorization Management
-    screenshot: metadata/screenshots/knowledge-graph.png
-  - id: ai-apps
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/agent/playground
-    headings:
-      - 首页/
-      - Agent/
-      - AI Apps/
-      - AI Apps
-      - HI，我是您的 一体化 小助手
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-8.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-9
+    title: 我的空间 - 禅道
+    url: http://localhost:8080/index.php?m=doc&f=mySpace&objectID=3
+    headings: []
     roleHints:
-      - English
-      - 创建智能体
-      - 查看详情
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - AI Apps
-      - Personal Space
-    screenshot: metadata/screenshots/ai-apps.png
-  - id: personal-space
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/agent/agents
-    headings:
-      - 首页/
-      - Agent/
-      - Personal Space/
-      - Personal Space
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-9.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-10
+    title: 团队 - 禅道
+    url: http://localhost:8080/index.php?m=my&f=team
+    headings: []
     roleHints:
-      - English
-      - 搜索
-      - 查看详情
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - AI Apps
-      - Personal Space
-    screenshot: metadata/screenshots/personal-space.png
-  - id: agent-ctreation
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/agentAdd
-    headings:
-      - 首页/
-      - Agent/
-      - Agent Ctreation/
-      - Agent Ctreation
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-10.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0
+  - id: index-php-11
+    title: 后台 - 禅道
+    url: http://localhost:8080/index.php?m=admin&f=index
+    headings: []
     roleHints:
-      - English
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - AI Apps
-      - Personal Space
-      - Agent Ctreation
-      - Agent Publish Application
-    screenshot: metadata/screenshots/agent-ctreation.png
-  - id: agent-publish-application
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/agentPublish
-    headings:
-      - 首页/
-      - Agent/
-      - Agent Publish Application/
-      - Agent Publish Application
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - 新建发布
-      - 查看详情
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-    screenshot: metadata/screenshots/agent-publish-application.png
-  - id: agent-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/allAgent
-    headings:
-      - 首页/
-      - Agent/
-      - Agent Management/
-      - Agent Management
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - AI Apps
-      - Personal Space
-    screenshot: metadata/screenshots/agent-management.png
-  - id: my-approval-tasks
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/myTask
-    headings:
-      - 首页/
-      - Agent/
-      - My Approval Tasks/
-      - My Approval Tasks
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - 审核
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - AI Apps
-    screenshot: metadata/screenshots/my-approval-tasks.png
-  - id: agent-api-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/agentInterface
-    headings:
-      - 首页/
-      - Agent/
-      - Agent API Management/
-      - Agent API Management
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - API密钥
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - AI Apps
-    screenshot: metadata/screenshots/agent-api-management.png
-  - id: sensitive-word-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/minganci
-    headings:
-      - 首页/
-      - Agent/
-      - Sensitive Word Management/
-      - Sensitive Word Management
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - 新增
-      - 编辑
-      - 删除
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-    screenshot: metadata/screenshots/sensitive-word-management.png
-  - id: mcp-marketplace
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/mcp/market
-    headings:
-      - 首页/
-      - MCP Services/
-      - MCP Marketplace/
-      - MCP Marketplace
-    roleHints:
-      - English
-      - 搜索
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-      - MCP Marketplace
-      - Personal Center
-    screenshot: metadata/screenshots/mcp-marketplace.png
-  - id: personal-center
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/mcp/personalCenter
-    headings:
-      - 首页/
-      - MCP Services/
-      - Personal Center/
-      - Personal Center
-    roleHints:
-      - English
-      - 搜索
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-      - MCP Marketplace
-      - Personal Center
-    screenshot: metadata/screenshots/personal-center.png
-  - id: management-center
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/mcp/manager
-    headings:
-      - 首页/
-      - MCP Services/
-      - Management Center/
-      - Management Center
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - 新建MCP服务
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-    screenshot: metadata/screenshots/management-center.png
-  - id: authorization-approval
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/mcp/approve
-    headings:
-      - 首页/
-      - MCP授权审批/
-      - MCP授权审批
-    roleHints:
-      - English
-      - 搜索
-      - 重置
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-      - MCP Marketplace
-    screenshot: metadata/screenshots/authorization-approval.png
-  - id: chatbi
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/ChatBI
-    headings:
-      - 首页/
-      - ChatBI/
-      - ChatBI
-    roleHints:
-      - English
-      - 当前位于新会话
-      - 选择数据源
-      - 上传文件
-      - 全选
-      - 全部取消
-      - 确 定
-      - deepseek-r1
-      - 南洋万邦星宫AI平台
-      - Home
-    screenshot: metadata/screenshots/chatbi.png
-  - id: database-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/data
-    headings:
-      - 首页/
-      - ChatBI/
-      - Database Management/
-      - Database Management
-    roleHints:
-      - English
-      - 新建数据库连接
-      - 删除
-      - 编辑
-      - 同步
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-    screenshot: metadata/screenshots/database-management.png
-  - id: table-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/table
-    headings:
-      - 首页/
-      - ChatBI/
-      - Table Management/
-      - Table Management
-    roleHints:
-      - English
-      - 智能填写
-      - 删除
-      - 编辑
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-    screenshot: metadata/screenshots/table-management.png
-  - id: field-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/column
-    headings:
-      - 首页/
-      - ChatBI/
-      - Field Management/
-      - Field Management
-    roleHints:
-      - English
-      - 智能填写
-      - 删除
-      - 编辑
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-    screenshot: metadata/screenshots/field-management.png
-  - id: role-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/role
-    headings:
-      - 首页/
-      - ChatBI/
-      - Role Management/
-      - Role Management
-    roleHints:
-      - English
-      - 新建角色
-      - 删除
-      - 编辑
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-    screenshot: metadata/screenshots/role-management.png
-  - id: function-configuration
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/configuration
-    headings:
-      - 首页/
-      - ChatBI/
-      - Function Configuration/
-      - Function Configuration
-    roleHints:
-      - English
-      - 新增
-      - 删除
-      - 权限配置
-      - 修改
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-    screenshot: metadata/screenshots/function-configuration.png
-  - id: permission-configuration
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/Chatbi/permissionConfiguration
-    headings:
-      - 首页/
-      - ChatBI/
-      - Permission Configuration/
-      - Permission Configuration
-    roleHints:
-      - English
-      - 添加
-      - 删除
-      - 详情
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-      - Knowledge Base
-      - Agent
-      - MCP Services
-    screenshot: metadata/screenshots/permission-configuration.png
-  - id: template-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/model/TemplateManager
-    headings:
-      - 首页/
-      - Model Management/
-      - Template Management/
-      - Template Management
-    roleHints:
-      - English
-      - 重置
-      - 搜索
-      - 新增
-      - 查看
-      - 编辑
-      - 删除
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-    screenshot: metadata/screenshots/template-management.png
-  - id: resource-management
-    title: 星宫AI平台
-    url: https://zodiactest.ny-zodiac.com:8443/model/ResourceManager
-    headings:
-      - 首页/
-      - Model Management/
-      - Resource Management/
-      - Resource Management
-    roleHints:
-      - English
-      - 重置
-      - 搜索
-      - 新增
-      - 查看
-      - 编辑
-      - 删除
-      - 南洋万邦星宫AI平台
-      - Home
-      - All-In-One
-    screenshot: metadata/screenshots/resource-management.png
+      - 研发综合界面
+      - 升级
+      - 地盘
+      - 产品
+      - 项目
+      - 执行
+      - 测试
+      - DevOps
+      - AI
+      - BI
+      - 看板
+      - 文档
+      - 组织
+      - 后台
+      - 开源版21.7
+    screenshot: metadata/screenshots/index-php-11.png
+    interactiveElementCount: 15
+    formFieldCount: 1
+    dialogCount: 0
+    tableCount: 0

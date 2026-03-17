@@ -1,14 +1,14 @@
 {
   "project": {
-    "name": "星宫",
-    "siteUrl": "https://zodiactest.ny-zodiac.com:8443/index",
+    "name": "禅道",
+    "siteUrl": "http://localhost:8080/",
     "operator": "local-user",
     "auth": {
       "requiresLogin": true,
-      "loginUrl": "https://zodiactest.ny-zodiac.com:8443/index"
+      "loginUrl": "http://localhost:8080/index"
     },
     "createdAt": "2026-03-10T06:09:17.138Z",
-    "updatedAt": "2026-03-10T08:06:26.468Z"
+    "updatedAt": "2026-03-17T06:09:30.888Z"
   },
   "steps": {
     "project_init": {
@@ -23,7 +23,7 @@
         }
       ],
       "approvals": [],
-      "updatedAt": "2026-03-10T08:06:26.468Z"
+      "updatedAt": "2026-03-17T06:09:30.890Z"
     },
     "requirements_upload": {
       "id": "requirements_upload",
@@ -37,7 +37,7 @@
         }
       ],
       "approvals": [],
-      "updatedAt": "2026-03-10T08:06:29.965Z"
+      "updatedAt": "2026-03-17T06:14:00.072Z"
     },
     "requirements_normalize": {
       "id": "requirements_normalize",
@@ -60,21 +60,21 @@
           "stepId": "requirements_normalize",
           "action": "reviewed",
           "actor": "local-user",
-          "timestamp": "2026-03-10T08:06:55.648Z"
+          "timestamp": "2026-03-17T06:17:20.946Z"
         },
         {
           "stepId": "requirements_normalize",
           "action": "approved",
           "actor": "local-user",
-          "timestamp": "2026-03-10T08:06:56.457Z"
+          "timestamp": "2026-03-17T06:17:21.496Z"
         }
       ],
-      "updatedAt": "2026-03-10T08:06:56.457Z"
+      "updatedAt": "2026-03-17T06:17:21.496Z"
     },
     "site_explore": {
       "id": "site_explore",
       "title": "站点探索",
-      "status": "approved",
+      "status": "ai_generated",
       "artifacts": [
         {
           "label": "页面元数据",
@@ -92,6 +92,11 @@
           "kind": "markdown"
         },
         {
+          "label": "页面交互元素",
+          "path": "metadata/site/page-elements.json",
+          "kind": "json"
+        },
+        {
           "label": "站点探索元数据",
           "path": "metadata/site/explore-meta.json",
           "kind": "json"
@@ -103,184 +108,70 @@
         },
         {
           "label": "站点截图 2",
-          "path": "metadata/screenshots/all-in-one.png",
+          "path": "metadata/screenshots/index-php.png",
           "kind": "image"
         },
         {
           "label": "站点截图 3",
-          "path": "metadata/screenshots/ai-ppt.png",
+          "path": "metadata/screenshots/index-php-2.png",
           "kind": "image"
         },
         {
           "label": "站点截图 4",
-          "path": "metadata/screenshots/private-search.png",
+          "path": "metadata/screenshots/index-php-3.png",
           "kind": "image"
         },
         {
           "label": "站点截图 5",
-          "path": "metadata/screenshots/knowledge-base-management.png",
+          "path": "metadata/screenshots/index-php-4.png",
           "kind": "image"
         },
         {
           "label": "站点截图 6",
-          "path": "metadata/screenshots/file-management.png",
+          "path": "metadata/screenshots/index-php-5.png",
           "kind": "image"
         },
         {
           "label": "站点截图 7",
-          "path": "metadata/screenshots/q-a-history.png",
+          "path": "metadata/screenshots/index-php-6.png",
           "kind": "image"
         },
         {
           "label": "站点截图 8",
-          "path": "metadata/screenshots/authorization-management.png",
+          "path": "metadata/screenshots/index-php-7.png",
           "kind": "image"
         },
         {
           "label": "站点截图 9",
-          "path": "metadata/screenshots/knowledge-graph.png",
+          "path": "metadata/screenshots/index-php-8.png",
           "kind": "image"
         },
         {
           "label": "站点截图 10",
-          "path": "metadata/screenshots/ai-apps.png",
+          "path": "metadata/screenshots/index-php-9.png",
           "kind": "image"
         },
         {
           "label": "站点截图 11",
-          "path": "metadata/screenshots/personal-space.png",
+          "path": "metadata/screenshots/index-php-10.png",
           "kind": "image"
         },
         {
           "label": "站点截图 12",
-          "path": "metadata/screenshots/agent-ctreation.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 13",
-          "path": "metadata/screenshots/agent-publish-application.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 14",
-          "path": "metadata/screenshots/agent-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 15",
-          "path": "metadata/screenshots/my-approval-tasks.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 16",
-          "path": "metadata/screenshots/agent-api-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 17",
-          "path": "metadata/screenshots/sensitive-word-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 18",
-          "path": "metadata/screenshots/mcp-marketplace.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 19",
-          "path": "metadata/screenshots/personal-center.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 20",
-          "path": "metadata/screenshots/management-center.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 21",
-          "path": "metadata/screenshots/authorization-approval.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 22",
-          "path": "metadata/screenshots/chatbi.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 23",
-          "path": "metadata/screenshots/database-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 24",
-          "path": "metadata/screenshots/table-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 25",
-          "path": "metadata/screenshots/field-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 26",
-          "path": "metadata/screenshots/role-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 27",
-          "path": "metadata/screenshots/function-configuration.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 28",
-          "path": "metadata/screenshots/permission-configuration.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 29",
-          "path": "metadata/screenshots/template-management.png",
-          "kind": "image"
-        },
-        {
-          "label": "站点截图 30",
-          "path": "metadata/screenshots/resource-management.png",
+          "path": "metadata/screenshots/index-php-11.png",
           "kind": "image"
         }
       ],
-      "approvals": [
-        {
-          "stepId": "site_explore",
-          "action": "reviewed",
-          "actor": "local-user",
-          "timestamp": "2026-03-10T09:24:47.611Z"
-        },
-        {
-          "stepId": "site_explore",
-          "action": "approved",
-          "actor": "local-user",
-          "timestamp": "2026-03-10T09:24:49.597Z"
-        }
-      ],
-      "updatedAt": "2026-03-10T09:24:49.597Z"
+      "approvals": [],
+      "updatedAt": "2026-03-17T06:24:21.643Z"
     },
     "plan_generate": {
       "id": "plan_generate",
       "title": "测试计划生成",
-      "status": "ai_generated",
-      "artifacts": [
-        {
-          "label": "模块测试计划",
-          "path": "plans/module-test-plan.md",
-          "kind": "markdown"
-        },
-        {
-          "label": "测试计划元数据",
-          "path": "plans/module-test-plan.meta.json",
-          "kind": "json"
-        }
-      ],
+      "status": "draft",
+      "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-10T10:01:29.578Z"
+      "updatedAt": "2026-03-17T06:09:30.901Z"
     },
     "cases_generate": {
       "id": "cases_generate",
@@ -288,7 +179,7 @@
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-10T08:06:26.470Z"
+      "updatedAt": "2026-03-17T06:09:30.901Z"
     },
     "tests_generate": {
       "id": "tests_generate",
@@ -296,7 +187,7 @@
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-10T08:06:26.470Z"
+      "updatedAt": "2026-03-17T06:09:30.901Z"
     },
     "tests_run": {
       "id": "tests_run",
@@ -304,7 +195,7 @@
       "status": "draft",
       "artifacts": [],
       "approvals": [],
-      "updatedAt": "2026-03-10T08:06:26.470Z"
+      "updatedAt": "2026-03-17T06:09:30.901Z"
     }
   },
   "logs": [
@@ -891,7 +782,135 @@
       "action": "生成",
       "actor": "local-user",
       "message": "已生成模块级测试计划。"
+    },
+    {
+      "id": "1773716109100-f62177",
+      "timestamp": "2026-03-17T02:55:09.100Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 https://zodiactest.ny-zodiac.com:8443/index。"
+    },
+    {
+      "id": "1773716119688-8920cf",
+      "timestamp": "2026-03-17T02:55:19.688Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773716148847-c28eb5",
+      "timestamp": "2026-03-17T02:55:48.847Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用模板降级模式生成规范化需求。"
+    },
+    {
+      "id": "1773716240379-a610fd",
+      "timestamp": "2026-03-17T02:57:20.379Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用模板降级模式生成规范化需求。"
+    },
+    {
+      "id": "1773716241399-0c3f04",
+      "timestamp": "2026-03-17T02:57:21.399Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用模板降级模式生成规范化需求。"
+    },
+    {
+      "id": "1773716937655-95f1ac",
+      "timestamp": "2026-03-17T03:08:57.655Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773717089923-a33cb0",
+      "timestamp": "2026-03-17T03:11:29.923Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773717112057-ab62e7",
+      "timestamp": "2026-03-17T03:11:52.057Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773717112770-615420",
+      "timestamp": "2026-03-17T03:11:52.770Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773718866138-806203",
+      "timestamp": "2026-03-17T03:41:06.138Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
+    },
+    {
+      "id": "1773727770891-742de8",
+      "timestamp": "2026-03-17T06:09:30.891Z",
+      "stepId": "project_init",
+      "action": "初始化",
+      "actor": "local-user",
+      "message": "已完成项目初始化，目标站点为 http://localhost:8080/。"
+    },
+    {
+      "id": "1773728040072-d522ed",
+      "timestamp": "2026-03-17T06:14:00.072Z",
+      "stepId": "requirements_upload",
+      "action": "上传",
+      "actor": "local-user",
+      "message": "已上传原始需求文档。"
+    },
+    {
+      "id": "1773728126315-99e996",
+      "timestamp": "2026-03-17T06:15:26.315Z",
+      "stepId": "requirements_normalize",
+      "action": "生成",
+      "actor": "local-user",
+      "message": "已使用实时 LLM 模式生成规范化需求。"
+    },
+    {
+      "id": "1773728240946-40a868",
+      "timestamp": "2026-03-17T06:17:20.946Z",
+      "stepId": "requirements_normalize",
+      "action": "审阅",
+      "actor": "local-user",
+      "message": "已保存人工审阅内容。"
+    },
+    {
+      "id": "1773728241496-23329f",
+      "timestamp": "2026-03-17T06:17:21.496Z",
+      "stepId": "requirements_normalize",
+      "action": "批准",
+      "actor": "local-user",
+      "message": "当前步骤已批准，可以进入下一环节。"
+    },
+    {
+      "id": "1773728661643-a96be7",
+      "timestamp": "2026-03-17T06:24:21.643Z",
+      "stepId": "site_explore",
+      "action": "探索",
+      "actor": "local-user",
+      "message": "已完成受控站点探索并生成页面元数据。"
     }
   ],
-  "updatedAt": "2026-03-10T10:01:29.578Z"
+  "updatedAt": "2026-03-17T06:24:21.643Z"
 }

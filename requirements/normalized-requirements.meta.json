@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-03-10T15:24:24.909Z",
+  "generatedAt": "2026-03-17T06:15:26.311Z",
   "mode": "live",
-  "provider": "moonshot",
-  "model": "moonshot-v1-8k"
+  "provider": "MiniMax",
+  "model": "MiniMax-M2.5"
 }

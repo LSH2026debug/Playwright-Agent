@@ -1,3 +1,3 @@
-2026/03/10-17:08:20.952 b0bc Reusing MANIFEST C:\Playwright Agent\ai-playwright-poc\artifacts\auth\browser-profile\Default\shared_proto_db/MANIFEST-000001
-2026/03/10-17:08:20.953 b0bc Recovering log #3
-2026/03/10-17:08:20.954 b0bc Reusing old log C:\Playwright Agent\ai-playwright-poc\artifacts\auth\browser-profile\Default\shared_proto_db/000003.log 
+2026/03/17-14:17:32.137 4288 Reusing MANIFEST C:\Code_Python\Playwright-Agent\artifacts\auth\browser-profile\Default\shared_proto_db/MANIFEST-000001
+2026/03/17-14:17:32.138 4288 Recovering log #3
+2026/03/17-14:17:32.139 4288 Reusing old log C:\Code_Python\Playwright-Agent\artifacts\auth\browser-profile\Default\shared_proto_db/000003.log 
