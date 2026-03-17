@@ -1,0 +1,15 @@
+flows:
+  - id: entry-navigation
+    name: 登录后关键页面浏览
+    steps:
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/index）
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/AllInOne）
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/Aippt）
+      - 星宫AI平台（https://zodiactest.ny-zodiac.com:8443/data/KBChat）
+  - id: content-sampling
+    name: 关键页面抽样检查
+    steps:
+      - 检查页面 home 的标题、标题层级和可见操作提示
+      - 检查页面 all-in-one 的标题、标题层级和可见操作提示
+      - 检查页面 ai-ppt 的标题、标题层级和可见操作提示
+      - 检查页面 private-search 的标题、标题层级和可见操作提示

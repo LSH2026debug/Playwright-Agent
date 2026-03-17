@@ -1,0 +1,176 @@
+[
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:17.177Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:17.183Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.816Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.826Z"
+  },
+  {
+    "stepId": "plan_generate",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.854Z"
+  },
+  {
+    "stepId": "plan_generate",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.863Z"
+  },
+  {
+    "stepId": "cases_generate",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.891Z"
+  },
+  {
+    "stepId": "cases_generate",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:09:22.900Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:18:15.465Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:18:16.096Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:18:47.278Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:18:47.902Z"
+  },
+  {
+    "stepId": "plan_generate",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:19:20.130Z"
+  },
+  {
+    "stepId": "plan_generate",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:19:20.634Z"
+  },
+  {
+    "stepId": "cases_generate",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:19:50.038Z"
+  },
+  {
+    "stepId": "cases_generate",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:19:50.663Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:28:07.141Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:28:07.493Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:41:51.836Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:41:52.383Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:47:31.878Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T06:49:30.230Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T07:18:27.767Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T07:21:05.607Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T07:21:41.610Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T08:06:55.648Z"
+  },
+  {
+    "stepId": "requirements_normalize",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T08:06:56.457Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "reviewed",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T09:24:47.611Z"
+  },
+  {
+    "stepId": "site_explore",
+    "action": "approved",
+    "actor": "local-user",
+    "timestamp": "2026-03-10T09:24:49.597Z"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "cookies": [
+    {
+      "name": "Admin-Token",
+      "value": "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImRmZWJiYTM4LWQ2ZmYtNDgzMi04ZDlhLTU0ZTdlOTY4ZGUxYSJ9.fIIom1RL1uRabgfrdN1m4RBcvATLMbkq2X1NYrco2pYxm1UAGlqqUPD4zoV9q4psAmQkfFugmlHBJ1w0MdoqsA",
+      "domain": "zodiactest.ny-zodiac.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

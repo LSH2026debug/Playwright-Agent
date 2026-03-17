@@ -1,0 +1,12 @@
+{
+  "exploredAt": "2026-03-10T09:24:14.875Z",
+  "siteUrl": "https://zodiactest.ny-zodiac.com:8443/index",
+  "maxPagesRequested": 30,
+  "screenshotCount": 30,
+  "pagesCount": 30,
+  "flowsCount": 2,
+  "requiresLogin": true,
+  "authenticated": true,
+  "loginUrlUsed": "https://zodiactest.ny-zodiac.com:8443/index",
+  "authMethod": "manual_session"
+}
